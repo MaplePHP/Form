@@ -7,7 +7,7 @@
  * @Version: 	1.0.0
  */
 
-namespace Form;
+namespace PHPFuse\Form;
 
 class Arguments {
 

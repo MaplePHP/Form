@@ -6,7 +6,9 @@
  				Don't delete this comment, its part of the license.
  * @Version: 	2.2.1
  */
-namespace Form;
+namespace PHPFuse\Form;
+
+use PHPFuse\Form\Interfaces\FormFieldsInterface;
 
 class Fields {
 
@@ -23,7 +25,7 @@ class Fields {
 
 	static private $_inst;
 
-	function __construct(Templates\Fields $fields, ?array $factoryArr = NULL) {
+	function __construct(FormFieldsInterface $fields, ?array $factoryArr = NULL) {
 		self::$_inst = $this;
 		$this->_fields = $fields;
 		if(!is_null($factoryArr)) {
