@@ -387,4 +387,12 @@ class Arguments {
 		return $jsonStr;
 	}
 
+
+	protected function isChecked($val): bool
+	{
+		if(is_array($this->_value)) {
+			return (bool)in_array((string)$val, $this->_value);
+		}
+		return (bool)((string)$val === (string)$this->_value);
+	}
 }

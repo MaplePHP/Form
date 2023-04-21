@@ -262,6 +262,10 @@ class Fields {
 			}
 		}
 	}
+
+	function getData(string $formName) {
+		return $this->_inpArr[$formName];
+	}
 	
 	function data($key = false) {
 		$arr = $this->_inputArray();
