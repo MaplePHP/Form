@@ -11,46 +11,60 @@ namespace PHPFuse\Form;
 
 class Arguments {
 
-	protected $_rows = array();
-	protected $_attr;
-	protected $_attrArr = array();
-	protected $_db = array();
-	protected $_name;
-	protected $_test;
-	protected $_imageID;
-	protected $_identifier;
-	protected $_grpIdentifier;
-	protected $_value;
-	protected $_header;
-	protected $_label;
-	protected $_description;
-	protected $_exclude;
-	protected $_max = 0;
-	protected $_validate = array();
+	protected $rows = array();
+	protected $attr;
+	protected $attrArr = array();
+	protected $db = array();
+	protected $name;
+	
+	protected $identifier;
+	protected $grpIdentifier;
+	protected $value;
+	protected $header;
+	protected $label;
+	protected $description;
+	protected $exclude;
+	protected $max = 0;
+	protected $validate = array();
 
-	protected $_inpType = "text";
+	protected $inpType = "text";
 
 	// Container
-	protected $_class;
-	protected $_conAttr;
-	protected $_conAttrArr = array();
+	protected $class;
+	protected $conAttr;
+	protected $conAttrArr = array();
 
 
-	protected $_items = array();
-	protected $_itemsDescription = array();
-	protected $_config = array();
-	protected $_fields = array();
+	protected $items = array();
+	protected $itemsDescription = array();
+	protected $config = array();
+	protected $fields = array();
 
 
-	protected $_count = 0;
+	protected $count = 0;
 
-	protected $_nameExp; // Used to get value
-	protected $_dataName;
+	protected $nameExp; // Used to get value
+	protected $dataName;
 
+	protected $inst;
+	protected $level = 1;
+	protected $valueFormat;
+	protected $encrypt;
 	protected $_inst;
-	protected $_level = 1;
-	protected $_valueFormat;
-	protected $_encrypt;
+
+
+	/**
+	 * DEPRECATED
+	 * protected $_imageID;
+	 */
+
+	/*
+	function imageID($imageID = false) {
+		$this->_imageID = $imageID;
+		//$this->_imageID = $this->identifier;
+		return $this;
+	}
+	 */
 
 	
 	function inst($inst) {
@@ -58,11 +72,6 @@ class Arguments {
 		return $this;
 	}
 
-	function imageID($imageID = false) {
-		$this->_imageID = $imageID;
-		//$this->_imageID = $this->_identifier;
-		return $this;
-	}
 
 	function get() {
 		$this->value();
@@ -72,87 +81,87 @@ class Arguments {
 	
 	function attr($arr) {
 		if(is_array($arr)) {
-			$this->_attrArr = array_merge($this->_attrArr, $arr);
-			foreach($arr as $key => $value) $this->_attr .= "{$key}=\"{$value}\" ";
+			$this->attrArr = array_merge($this->attrArr, $arr);
+			foreach($arr as $key => $value) $this->attr .= "{$key}=\"{$value}\" ";
 		}
 		return $this;
 	}
 
 	function conAttr($arr) {
 		if(is_array($arr)) {
-			$this->_conAttrArr = array_merge($this->_conAttrArr, $arr);
-			foreach($arr as $key => $value) $this->_conAttr .= "{$key}=\"{$value}\" ";
+			$this->conAttrArr = array_merge($this->conAttrArr, $arr);
+			foreach($arr as $key => $value) $this->conAttr .= "{$key}=\"{$value}\" ";
 		}
 		return $this;
 	}
 
 	function setAttr() {
-		$this->_attr = "";
-		foreach($this->_attrArr as $key => $value) $this->_attr .= "{$key}=\"{$value}\" ";
-		return $this->_attr;
+		$this->attr = "";
+		foreach($this->attrArr as $key => $value) $this->attr .= "{$key}=\"{$value}\" ";
+		return $this->attr;
 	}
 
 	function setConAttr() {
-		$this->_conAttr = "";
-		foreach($this->_conAttrArr as $key => $value) $this->_conAttr .= "{$key}=\"{$value}\" ";
-		return $this->_conAttr;
+		$this->conAttr = "";
+		foreach($this->conAttrArr as $key => $value) $this->conAttr .= "{$key}=\"{$value}\" ";
+		return $this->conAttr;
 	}
 
 
 	function db($arr) {
 		if(is_array($arr)) {
-			$this->_db = array_merge($this->_db, $arr);
+			$this->db = array_merge($this->db, $arr);
 		}
 		return $this;
 	}
 
 	function config($arr) {
-		if(is_array($arr)) $this->_config = array_merge($this->_config, $arr);
+		if(is_array($arr)) $this->config = array_merge($this->config, $arr);
 		return $this;
 	}
 
 	function rows($arr) {
-		if(is_array($arr)) $this->_rows = array_merge($this->_rows, $arr);
+		if(is_array($arr)) $this->rows = array_merge($this->rows, $arr);
 		return $this;
 	}
 
 	function items($arr) {
-		if(is_array($arr)) $this->_items = $arr;
+		if(is_array($arr)) $this->items = $arr;
 		return $this;
 	}
 	
 	function itemsDescription($arr) {
-		if(is_array($arr)) $this->_itemsDescription = $arr;
+		if(is_array($arr)) $this->itemsDescription = $arr;
 		return $this;
 	}
 
 	function fields($arr) {
-		if(is_array($arr)) $this->_fields = $arr;
+		if(is_array($arr)) $this->fields = $arr;
 		return $this;
 	}
 
 	function class($str) {
-		if($str) $this->_class = $str;
+		if($str) $this->class = $str;
 		return $this;
 	}
 
 	function max($max) {
-		if($max) $this->_max = (int)$max;
+		if($max) $this->max = (int)$max;
 		return $this;
 	}
 
 	function validate($arr) {
-		if(is_array($arr)) $this->_validate = $arr;
+		if(is_array($arr)) $this->validate = $arr;
 		return $this;
 	}
 
 	function exclude($exclude) {
-		$this->_exclude = explode(",", $exclude);
+		$this->exclude = explode(",", $exclude);
 		return $this;
 	}
 
 	function encrypt($encrypt) {
-		if($encrypt) $this->_encrypt = $encrypt;
+		if($encrypt) $this->encrypt = $encrypt;
 		return $this;
 	}
 
@@ -163,30 +172,30 @@ class Arguments {
 	 */
 	function valueFormat(?array $arr = NULL) {
 		if(is_array($arr)) {
-			$this->_valueFormat = $arr;
+			$this->valueFormat = $arr;
 		}
 		return $this;
 	}
 
 
 	// TEST DO NOT USE
-	protected function _buildGrp() {
+	protected function buildGrp() {
 		$new = array();
-		if(is_null($this->_value)) $this->_value = array(0);
-		foreach($this->_value as $k => $a) {
-			foreach($this->_fields as $name => $arr) {
-				$new["{$this->_identifier},{$k},{$name}"] = $arr;
+		if(is_null($this->value)) $this->value = array(0);
+		foreach($this->value as $k => $a) {
+			foreach($this->fields as $name => $arr) {
+				$new["{$this->identifier},{$k},{$name}"] = $arr;
 			}
 		}
 		return $new;
 	}
 
 
-	protected function _columns() {
+	protected function columns() {
 		$out = "";
-		if(is_array($this->_fields)) {
-			ksort($this->_fields);
-			foreach($this->_fields as $key => $array) {
+		if(is_array($this->fields)) {
+			ksort($this->fields);
+			foreach($this->fields as $key => $array) {
 				$out .= "<div class=\"col\">";
 				$out .= $this->_inst->html($array);
 				$out .= "</div>";
@@ -195,19 +204,17 @@ class Arguments {
 		return $out;
 	}
 
-	protected function _groupFeed($callback, $autoFixKey = true) {
+	protected function groupFeed($callback, $autoFixKey = true) {
 
 		$out = "";
 		$fields = array();
-		if(!is_array($this->_value)) $this->_value = array(0);
+		if(!is_array($this->value)) $this->value = array(0);
 
-		foreach($this->_value as $k => $a) {
+		foreach($this->value as $k => $a) {
 			$o = "";
-
-
-			foreach($this->_fields as $name => $arr) {
-				$fk = ($autoFixKey) ? "{$this->_identifier},{$k},{$name}" : $name;
-				$arr['imageID'] = "{$this->_grpIdentifier},{$name}";
+			foreach($this->fields as $name => $arr) {
+				$fk = ($autoFixKey) ? "{$this->identifier},{$k},{$name}" : $name;
+				$arr['imageID'] = "{$this->grpIdentifier},{$name}";
 
 				$fields[$fk] = $arr;
 				$o .= $this->_inst->html($fields);
@@ -219,14 +226,14 @@ class Arguments {
 		return $out;
 	}
 
-	protected function _group($autoFixKey = true) {
+	protected function group($autoFixKey = true) {
 		$out = "";
 		$fields = array();
 		
 		$o = "";
-		foreach($this->_fields as $name => $arr) {
-			$fk = ($autoFixKey) ? "{$this->_identifier},{$name}" : $name;
-			$arr['imageID'] = "{$this->_grpIdentifier},{$name}";
+		foreach($this->fields as $name => $arr) {
+			$fk = ($autoFixKey) ? "{$this->identifier},{$name}" : $name;
+			$arr['imageID'] = "{$this->grpIdentifier},{$name}";
 
 			$fields[$fk] = $arr;
 			$o .= $this->_inst->html($fields);
@@ -236,13 +243,13 @@ class Arguments {
 	}
 
 
-	protected function _groupList($name, $callback) {
+	protected function groupList($name, $callback) {
 
 		$out = "";
 		$fields = array();
-		if(!is_array($this->_value)) $this->_value = array(0);
+		if(!is_array($this->value)) $this->value = array(0);
 
-		foreach($this->_value as $k => $a) {
+		foreach($this->value as $k => $a) {
 			$o = "";
 			$fk = "{$name},";
 			$this->name($fk);
@@ -252,22 +259,22 @@ class Arguments {
 	}
 
 	function label($label) {
-		if($label) $this->_label = $label;
+		if($label) $this->label = $label;
 		return $this;
 	}
 
 	function header($header) {
-		if($header) $this->_header = $header;
+		if($header) $this->header = $header;
 		return $this;
 	}
 
 	function description($description) {
-		if($description) $this->_description = $description;
+		if($description) $this->description = $description;
 		return $this;
 	}
 	
 	function inp_type($type) {
-		$this->_inpType = ($type !== false) ? $type : "text";
+		$this->inpType = ($type !== false) ? $type : "text";
 		return $this;
 	}
 
@@ -276,27 +283,20 @@ class Arguments {
 	}
 
 	function name($name) {
-		$this->_grpIdentifier = $this->_identifier = trim($name);
-		$this->_nameExp = $exp = explode(",", $this->_identifier);
-		$this->_name = array_shift($exp);
-		$this->_dataName = end($this->_nameExp);
+		$this->grpIdentifier = $this->identifier = trim($name);
+		$this->nameExp = $exp = explode(",", $this->identifier);
+		$this->name = array_shift($exp);
+		$this->dataName = end($this->nameExp);
+		$this->grpIdentifier = preg_replace('/(,[0-9])+/', '', $this->grpIdentifier);
 
-		$this->_grpIdentifier = preg_replace('/(,[0-9])+/', '', $this->_grpIdentifier);
-		//$this->_grpIdentifier = str_replace(",,", ",", $this->_grpIdentifier);
-
-		
-
-
-		$this->_inst->_validateArr[$this->_identifier]['id'] = ($this->_rows['id'] ?? 0);
-		$this->_inst->_validateArr[$this->_identifier]['type'] = $this->_inpType;
-		$this->_inst->_validateArr[$this->_identifier]['validate'] = $this->_validate;
-		$this->_inst->_validateArr[$this->_identifier]['encrypt'] = $this->_encrypt;
-		$this->_inst->_validateArr[$this->_identifier]['config'] = $this->_config;
-		
-			
+		$this->_inst->validateArr[$this->identifier]['id'] = ($this->rows['id'] ?? 0);
+		$this->_inst->validateArr[$this->identifier]['type'] = $this->inpType;
+		$this->_inst->validateArr[$this->identifier]['validate'] = $this->validate;
+		$this->_inst->validateArr[$this->identifier]['encrypt'] = $this->encrypt;
+		$this->_inst->validateArr[$this->identifier]['config'] = $this->config;
 
 		foreach($exp as $item) {
-			$this->_name .= "[".htmlentities(trim($item))."]";
+			$this->name .= "[".htmlentities(trim($item))."]";
 		}
 		return $this;
 	}
@@ -305,32 +305,30 @@ class Arguments {
 
 	function value($val = false) {
 		if($val !== false) {
-			$this->_value = $val;
+			$this->value = $val;
 
-		} elseif(is_array($this->_nameExp) && count($this->_nameExp) > 0) {
+		} elseif(is_array($this->nameExp) && count($this->nameExp) > 0) {
 
 			$values = $this->_inst->values();
 			if(!is_null($values)) {
 				$values = (array)$values;
-				$exp = $this->_nameExp;
+				$exp = $this->nameExp;
 
 				$first = array_shift($exp);
 				if(isset($values[$first])) {
-					$this->_value = $values[$first];
+					$this->value = $values[$first];
 					if(count($exp) > 0) {
-						$this->_value = $this->_json($this->_value);
+						$this->value = $this->json($this->value);
 						foreach($exp as $item) {
 							$item = htmlentities(trim($item));
-							$this->_value = isset($this->_value[$item]) ? $this->_value[$item] : $val;
+							$this->value = isset($this->value[$item]) ? $this->value[$item] : $val;
 						}
 					}
 				}
 			}
 		}
-	
 
-		$this->_valueFormat();
-
+		$this->setValueFormat();
 
 		return $this;
 	}
@@ -339,40 +337,40 @@ class Arguments {
 		return $this->_inst->values();
 	}
 
-	private function _valueFormat() {
+	private function setValueFormat() {
 
-		if(!is_null($this->_encrypt)) {
-			$this->_value = base64_decode($this->_value);
-			$this->_value = openssl_decrypt($this->_value, 'DES-EDE3', 'key', OPENSSL_RAW_DATA);
+		if(!is_null($this->encrypt)) {
+			$this->value = base64_decode($this->value);
+			$this->value = openssl_decrypt($this->value, 'DES-EDE3', 'key', OPENSSL_RAW_DATA);
 		}
 
-		if(!is_null($this->_valueFormat)) {
-			foreach($this->_valueFormat as $arr) {
-				$val = (is_string($this->_value) ? $this->_value : NULL);
+		if(!is_null($this->valueFormat)) {
+			foreach($this->valueFormat as $arr) {
+				$val = (is_string($this->value) ? $this->value : NULL);
 				$arr['args'] = ($arr['args'] ?? []);
 				array_unshift($arr['args'], $val);
-				$this->_value = call_user_func_array($arr['method'], $arr['args']);
+				$this->value = call_user_func_array($arr['method'], $arr['args']);
 			}
 		}		
 	}
 
 	function getEncrypt() {
-		return $this->_encrypt;
+		return $this->encrypt;
 	}
 
 	function get_name() {
-		return $this->_name;
+		return $this->name;
 	}
 
 	function get_value() {
-		return $this->_value;
+		return $this->value;
 	}
 
 	function itemValue() {
-		return (isset($this->_items[$this->_value])) ? $this->_items[$this->_value] : reset($this->_items);
+		return (isset($this->items[$this->value])) ? $this->items[$this->value] : reset($this->items);
 	}
 
-	private function _json($jsonStr) {
+	private function json($jsonStr) {
 		if(is_string($jsonStr)) {
 			$array = false;
 			if(function_exists("json_decode_data")) {
@@ -390,9 +388,9 @@ class Arguments {
 
 	protected function isChecked($val): bool
 	{
-		if(is_array($this->_value)) {
-			return (bool)in_array((string)$val, $this->_value);
+		if(is_array($this->value)) {
+			return (bool)in_array((string)$val, $this->value);
 		}
-		return (bool)((string)$val === (string)$this->_value);
+		return (bool)((string)$val === (string)$this->value);
 	}
 }

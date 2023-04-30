@@ -13,79 +13,83 @@ use PHPFuse\Form\Interfaces\FormFieldsInterface;
 class Fields {
 
 	
-	private $_form;
-	private $_type;
-	private $_args = array();
-	private $_inpArr = array();
-	private $_values = array();
-	private $_group;
-	private $_buildArr;
-	private $_factory;
-	public $_validateArr = array();
+	private $form;
+	private $fields;
+	private $type;
+	private $args = array();
+	private $inpArr = array();
+	private $values = array();
+	private $group;
+	private $buildArr;
+	private $factory;
+	public $validateArr = array();
 
 	static private $_inst;
 
 	function __construct(FormFieldsInterface $fields, ?array $factoryArr = NULL) {
 		self::$_inst = $this;
-		$this->_fields = $fields;
+		$this->fields = $fields;
 		if(!is_null($factoryArr)) {
-			foreach($factoryArr as $key => $obj) $this->_factory[$key] = $obj;
+			foreach($factoryArr as $key => $obj) $this->factory[$key] = $obj;
 		}
 	}
 
-	static function _inst() {
-		return self::$_inst;
-	}
-
+	
 	function factory(string $key) {
-		return $this->_factory[$key];
+		return $this->factory[$key];
 	}
 
 	function type() {
-		return $this->_type;
+		return $this->type;
+	}
+
+	function values() {
+		return $this->values;
 	}
 
 	function getForm() {		
-		return $this->_fields;
+		return $this->fields;
+	}
+
+	function getData() {
+		return $this->inputArray();
 	}
 
 	function __call($a, $b) {
 		// Reset build instance
-		if(!is_null($this->_type)) {
-			$class = get_class($this->_fields);
-			$this->_fields = new $class();
+		if(!is_null($this->type)) {
+			$class = get_class($this->fields);
+			$this->fields = new $class();
 		}
 
-		$this->_fields->inst($this);
-		$this->_type = $a;
-		$this->_args = $b;
-		return $this->_fields;
+		$this->fields->inst($this);
+		$this->type = $a;
+		$this->args = $b;
+		return $this->fields;
 	}
 
-	function values() {
-		return $this->_values;
-	}
+	
 
 	function setValues($values) {
 		$values = (array)$values;
 		foreach($values as $k => $val) {
-			if(is_array($val) || strlen($val)) $this->_values[$k] = $val;
+			if(is_array($val) || strlen($val)) $this->values[$k] = $val;
 		}
 		return $this;
 	}
 
 	function getFields($key) {
-		return ($this->_inpArr[$key] ?? false);
+		return ($this->inpArr[$key] ?? false);
 	}
 
 	function add($name, $fields) {
-		$this->_inpArr[$name] = $fields;
+		$this->inpArr[$name] = $fields;
 		return $this;
 	}
 
 	function merge($name, $fields) {
-		if(empty($this->_inpArr[$name])) $this->_inpArr[$name] = [];
-		$this->_inpArr[$name] = array_merge($this->_inpArr[$name], $fields);
+		if(empty($this->inpArr[$name])) $this->inpArr[$name] = [];
+		$this->inpArr[$name] = array_merge($this->inpArr[$name], $fields);
 		return $this;
 	}
 
@@ -93,12 +97,12 @@ class Fields {
 	function addToCarrot(string $name, string $carrotName, array $fields, ?string $newForm = NULL) {
 		$newArr = Array();
 
-		foreach($this->_inpArr[$name] as $key => $arr) {
+		foreach($this->inpArr[$name] as $key => $arr) {
 			if($carrotName === $key) {
 				if(is_null($newForm)) {
 					$newArr = array_merge($newArr, $fields);
 				} else {
-					unset($this->_inpArr[$name][$key]);
+					unset($this->inpArr[$name][$key]);
 				}
 			} else {
 				$newArr[$key] = $arr;
@@ -106,9 +110,9 @@ class Fields {
 		}
 
 		if(!is_null($newForm)) {
-			$this->_inpArr[$newForm] = $fields;
+			$this->inpArr[$newForm] = $fields;
 		} else {
-			$this->_inpArr[$name] = $newArr;
+			$this->inpArr[$name] = $newArr;
 		}
 
 		return $this;
@@ -116,18 +120,18 @@ class Fields {
 
 	
 	function get() {
-		if(!is_null($this->_type)) {
-			$get = call_user_func_array([$this->_fields, $this->_type], $this->_args);
+		if(!is_null($this->type)) {
+			$get = call_user_func_array([$this->fields, $this->type], $this->args);
 			return $get;
 		}
 	}
 
 	function moveItemToForm(string $currentForm, string $newForm, array $keys) {
 		$newArr = Array();
-		foreach($this->_inpArr[$currentForm] as $key => $arr) {
+		foreach($this->inpArr[$currentForm] as $key => $arr) {
 			if(in_array($key, $keys)) {
-				unset($this->_inpArr[$currentForm][$key]);
-				$this->_inpArr[$newForm][$key] = $arr;
+				unset($this->inpArr[$currentForm][$key]);
+				$this->inpArr[$newForm][$key] = $arr;
 			}
 		}
 
@@ -135,10 +139,10 @@ class Fields {
 	}
 
 	function mergeAfter($name, $key, $fields) {
-		if(empty($this->_inpArr[$name])) $this->_inpArr[$name] = [];
+		if(empty($this->inpArr[$name])) $this->inpArr[$name] = [];
 
 		$newArr = array();
-		foreach($this->_inpArr[$name] as $k => $row) {
+		foreach($this->inpArr[$name] as $k => $row) {
 			$newArr[$k] = $row;
 			if($key === $k) {
 				$nk = key($fields);
@@ -146,17 +150,17 @@ class Fields {
 			}
 
 		}
-		$this->_inpArr[$name] = $newArr;
+		$this->inpArr[$name] = $newArr;
 	
 
 		return $this;
 	}
 
 	function mergeBefore($name, $key, $fields) {
-		if(empty($this->_inpArr[$name])) $this->_inpArr[$name] = [];
+		if(empty($this->inpArr[$name])) $this->inpArr[$name] = [];
 
 		$newArr = array();
-		foreach($this->_inpArr[$name] as $k => $row) {
+		foreach($this->inpArr[$name] as $k => $row) {
 			
 			if($key === $k) {
 				$nk = key($fields);
@@ -165,7 +169,7 @@ class Fields {
 			$newArr[$k] = $row;
 
 		}
-		$this->_inpArr[$name] = $newArr;
+		$this->inpArr[$name] = $newArr;
 	
 
 		return $this;
@@ -183,34 +187,34 @@ class Fields {
 	}
 	
 	function inpArr() {
-		return $this->_inpArr;
+		return $this->inpArr;
 	}
 
 	function setInpArr(array $arr) {
-		$this->_inpArr = $arr;
+		$this->inpArr = $arr;
 		return $this;
 	}
 
 	function unset($name) {
-		unset($this->_inpArr[$name]);
+		unset($this->inpArr[$name]);
 	}
 
 	function delete($name, $key) {
 		if(is_array($key)) {
-			$this->_findDelete($this->_inpArr[$name], $key);
+			$this->_findDelete($this->inpArr[$name], $key);
 		} else {
-			if(isset($this->_inpArr[$name][$key])) unset($this->_inpArr[$name][$key]);
+			if(isset($this->inpArr[$name][$key])) unset($this->inpArr[$name][$key]);
 		}
 		return $this;
 	}
 
 	function prepend($name, $fields) {
-		$this->_inpArr[$name] = array_merge($fields, $this->_inpArr[$name]);
+		$this->inpArr[$name] = array_merge($fields, $this->inpArr[$name]);
 		return $this;
 	}
 
 	function append($fields) {
-		$this->_inpArr[$name] = array_merge($this->_inpArr[$name], $fields);
+		$this->inpArr[$name] = array_merge($this->inpArr[$name], $fields);
 		return $this;
 	}
 
@@ -219,81 +223,53 @@ class Fields {
 		return $arr;
 	}
 
-	private function _inputArray($array = false) {
-		if(!is_array($array)) $array = $this->_inpArr;
-
-		$get = array();
-		foreach($array as $a1) {
-
-			foreach($a1 as $k => $a2) {
-				if(isset($a2['type'])) {					
-					if(isset($a2['fields'])) {
-						switch($a2['type']) {
-							case "group":
-
-								$this->_inputNestArray($a2['fields'], $get, $k);
-							break;
-							case "columns": case "checkShowFormPart":
-								
-								foreach($a2['fields'] as $row) {
-									$this->_inputNestArray($row, $get, false);
-								}
-							break;
-						}
-
-					} else {
-						$get[$k] = $a2;
-					}
-				}
-			}
-		}
-		return $get;
-	}
-
-	private function _inputNestArray($array, &$get, $key) {
-		foreach($array as $k => $row) {
-			if(isset($row['type'])) {
-				$k1 = ($key) ? $key.",{$k}" : $k;
-				if(isset($row['fields'])) {
-					$this->_inputNestArray($row['fields'], $get, $k1);
-				} else {
-					$get[$k1] = $row;
-				}
-			}
-		}
-	}
-
-	function getData(string $formName) {
-		return $this->_inpArr[$formName];
-	}
 	
-	function data($key = false) {
-		$arr = $this->_inputArray();
-		return ($key !== false) ? (isset($arr[$key]) ? $arr[$key] : false) : $arr;
+	function data(?string $key = NULL): array|string 
+	{
+		$arr = $this->inputArray();
+		return (!is_null($key)) ? (isset($arr[$key]) ? $arr[$key] : false) : $arr;
 	}
 
-	function validateArr($key = false) {
-		$arr = $this->_validateArr;
-		return ($key !== false) ? (isset($arr[$key]) ? $arr[$key] : false) : $arr;
+	function validateArr(?string $key = NULL): array|string 
+	{
+		$arr = $this->validateArr;
+		return (!is_null($key)) ? (isset($arr[$key]) ? $arr[$key] : false) : $arr;
 	}
 
-
-	function form($key) {
-		return ($this->_buildArr[$key] ?? false);
-	}
-
-	function build($callback = false) {
-		$this->_validateArr = array();
-		foreach($this->_inpArr as $key => $array) {
-			$this->_buildArr[$key] = $this->html($array, $callback);
+	/**
+	 * Build all form data
+	 * @param  callable|null $callback [description]
+	 * @return [type]                  [description]
+	 */
+	public function build(?callable $callback = NULL) 
+	{
+		// Reset validate arr, it will be re-built
+		$this->validateArr = array();
+		foreach($this->inpArr as $key => $array) {
+			$this->buildArr[$key] = $this->html($array, $callback);
 		}
 	}
 
-	function html($inpArr = false, $callback = false) {
+	/**
+	 * Get built form
+	 * @param  string $key form key
+	 * @return string|NULL
+	 */
+	function form(string $key): ?string
+	{
+		return ($this->buildArr[$key] ?? NULL);
+	}
+
+	/**
+	 * Build HTML
+	 * @param  array $inpArr
+	 * @param  callable $callback
+	 * @return string
+	 */
+	protected function html(array $inpArr, ?callable $callback = NULL): string 
+	{
 		$out = "";
-
 		foreach($inpArr as $name => $arr) {
-
 			if(isset($arr['type'])) {
 				$field = $this->{$arr['type']}();
 				$value = (isset($arr['value'])) ? $arr['value'] : false;
@@ -312,7 +288,7 @@ class Fields {
 				$class = (isset($arr['class'])) ? $arr['class'] : false;
 				$conAttr = (isset($arr['conAttr'])) ? $arr['conAttr'] : false;
 				$exclude = (isset($arr['exclude'])) ? $arr['exclude'] : false;
-				$imageID = (isset($arr['imageID'])) ? $arr['imageID'] : false;
+				//$imageID = (isset($arr['imageID'])) ? $arr['imageID'] : false;
 				$max = (isset($arr['max'])) ? (int)$arr['max'] : 0;
 				$validate = (isset($arr['validate'])) ? $arr['validate'] : array();
 
@@ -320,15 +296,61 @@ class Fields {
 				$valueFormat = (isset($arr['valueFormat'])) ? $arr['valueFormat'] : NULL;
 				$encrypt = (isset($arr['encrypt'])) ? $arr['encrypt'] : NULL;
 
-				$args = $field->rows($arr)->header($header)->label($label)->description($description)->encrypt($encrypt)->validate($validate)->imageID($imageID)->config($config)->name($name)
+				//->imageID($imageID)
+				$args = $field->rows($arr)->header($header)->label($label)->description($description)->encrypt($encrypt)->validate($validate)->config($config)->name($name)
 				->items($items)->itemsDescription($itemsDescription)->inp_type($inpType)->value($value)->fields($fields)
 				->attr($attr)->db($db)->exclude($exclude)->class($class)->valueFormat($valueFormat)->conAttr($conAttr)->max($max);
 
-				if($callback) $callback($args);
+				if(!is_null($callback)) $callback($args);
 				$out .= $args->get();
 			}
 		}
 
 		return $out;
 	}
+
+	private function inputArray(?array $array = NULL): array
+	{
+		if(!is_array($array)) $array = $this->inpArr;
+
+		$get = array();
+		foreach($array as $a1) {
+			foreach($a1 as $k => $a2) {
+				if(isset($a2['type'])) {					
+					if(isset($a2['fields'])) {
+						switch($a2['type']) {
+							case "group":
+								$this->inputNestArray($a2['fields'], $get, $k);
+							break;
+							case "columns": case "checkShowFormPart":
+								foreach($a2['fields'] as $row) {
+									$this->inputNestArray($row, $get, false);
+								}
+							break;
+						}
+
+					} else {
+						$get[$k] = $a2;
+					}
+				}
+			}
+		}
+		return $get;
+	}
+
+	private function inputNestArray(array $array, array &$get, string $key): void 
+	{
+		foreach($array as $k => $row) {
+			if(isset($row['type'])) {
+				$k1 = ($key) ? $key.",{$k}" : $k;
+				if(isset($row['fields'])) {
+					$this->inputNestArray($row['fields'], $get, $k1);
+				} else {
+					$get[$k1] = $row;
+				}
+			}
+		}
+	}
+
+
 }
