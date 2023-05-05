@@ -1,20 +1,92 @@
+
 # WA - Form builder
 Validate form inputs.
 
-### 1. Initiate
-```
+## 1. Initiate
+```php
 $fields = new Form\Fields(new Form\Templates\Fields());
 ```
 ### Basic: You can either quick create one field form the fields template
 $fields->[FIELD_TYPE]->[ARG1]->[ARG2]->get();
 **FIELD_TYPE:** Method name from Form\Templates\Fields
 **ARG:** Chainable arguments like input name, fields attributes, validations and so on.
-```
+```php
 echo $fields->text()->name("email")->attr(["type" => "email"])->get();
 ```
-### Advance:
-Build a whole form that follows template and has built in validation
+## Advance:
+Use the form compiler for advance consistent form creation and validation. Works really great in frameworks and large applications.
+
+### Create fields
 ```
+[
+	inputFieldName => [
+		// Field config…
+	],
+	…
+	…
+]
+```
+
+### Field config
+
+#### type (string)
+Expects defined form type key 
+**Example:** text, textarea, date, select, checkbox, radio and more.
+*Required*
+
+#### label (string)
+Define a input label
+**Example:** Email address
+
+#### description (string)
+Define a input label
+**Example:** We need your email to… 
+
+#### attr (array)
+Add html attributens to field
+**Example:** 
+```
+[
+	class => inp-email, 
+	type => email,
+	placeholder => Fill in the email
+]
+```
+#### items (array)
+Add checkbox, radio or select list items.
+**Example:** 
+```
+[
+	1 => Yes, 
+	0 => No
+]
+```
+*Is required for field types like select, checkbox and radio.*
+
+#### validate (array)
+Add validation to form field
+**Example:** 
+```
+[
+	length => [1, 200],
+	!email => NULL
+]
+```
+*The exclamation point before the email key means that it will **only** validate email if it is filled in else skip or do the other validation.*
+
+#### config (multidimensional array)
+Pass on custom data for a custom field.
+**Example:** 
+```
+[
+	role => admin,
+	user_id => 5212
+]
+```
+## Examples:
+#### 1. Create form with array
+Build a whole form with array as bellow
+```php
 $fields->add("userForm", [
 	"firstname" => [
 		"type" => "text", // Set form type (input text or textarea and so on.)
@@ -86,8 +158,10 @@ $fields->add("userForm", [
 	]
   	
 ]);
-
-// Set form values
+```
+#### 2. Set values if you want
+If you have values from for example the database (accepts multidimensional array and object)
+```php
 $fields->setValues([
 	"firstname" => "John",
 	"lastname" => "John",
@@ -97,10 +171,21 @@ $fields->setValues([
 	]
 ]);
 
-// Build form
-$fields->build();
-
-// Read out form
-echo $fields->form("userForm");
-
 ```
+#### 3. Build the form
+You will allways need to build the form before read or validations.
+```php
+$fields->build();
+```
+#### 4. Read form
+Now you can read the form.
+```php
+echo '<form action="index.php" method="post">';
+echo $fields->form("userForm");
+echo "</form>";
+```
+
+
+
+
+
