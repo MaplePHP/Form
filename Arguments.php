@@ -1,10 +1,9 @@
 <?php 
 /**
- * @Package: 	PHP Fuse - Form builder engine
+ * @Package: 	PHPFuse - Form builder engine
  * @Author: 	Daniel Ronkainen
  * @Licence: 	The MIT License (MIT), Copyright © Daniel Ronkainen
  				Don't delete this comment, its part of the license.
- * @Version: 	1.0.0
  */
 
 namespace PHPFuse\Form;
@@ -45,21 +44,7 @@ class Arguments {
 	protected $inst;
 	protected $level = 1;
 	protected $_inst;
-
-
-	/**
-	 * DEPRECATED
-	 * protected $_imageID;
-	 */
-
-	/*
-	function imageID($imageID = false) {
-		$this->_imageID = $imageID;
-		//$this->_imageID = $this->identifier;
-		return $this;
-	}
-	 */
-
+	
 	
 	function inst($inst) {
 		$this->_inst = $inst;
@@ -92,15 +77,7 @@ class Arguments {
 	function attr($arr) {
 		if(is_array($arr)) {
 			$this->attrArr = array_merge($this->attrArr, $arr);
-			foreach($arr as $key => $value) $this->attr .= "{$key}=\"{$value}\" ";
-		}
-		return $this;
-	}
-
-	function conAttr($arr) {
-		if(is_array($arr)) {
-			$this->conAttrArr = array_merge($this->conAttrArr, $arr);
-			foreach($arr as $key => $value) $this->conAttr .= "{$key}=\"{$value}\" ";
+			$this->setAttr();
 		}
 		return $this;
 	}
@@ -111,7 +88,15 @@ class Arguments {
 		return $this->attr;
 	}
 
-	function setConAttr() {
+	function conAttr($arr) {
+		if(is_array($arr)) {
+			$this->conAttrArr = array_merge($this->conAttrArr, $arr);
+			//$this->setConAttr();
+		}
+		return $this;
+	}
+
+	function getConAttr() {
 		$this->conAttr = "";
 		foreach($this->conAttrArr as $key => $value) $this->conAttr .= "{$key}=\"{$value}\" ";
 		return $this->conAttr;
@@ -168,7 +153,7 @@ class Arguments {
 		$this->grpIdentifier = preg_replace('/(,[0-9])+/', '', $this->grpIdentifier);
 
 
-		$this->_inst->setValidateArr($this->identifier, [
+		$this->_inst->setValidateData($this->identifier, [
 			"id" => ($this->rows['id'] ?? 0),
 			"type" => (!is_null($this->fieldType) ? $this->fieldType : "text"),
 			"validate" => $this->validate,

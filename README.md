@@ -1,10 +1,12 @@
-
-# WA - Form builder
-Validate form inputs.
+# PHPFues - Form builder
+Create advanced, consistent and secure forms and validations.
 
 ## 1. Initiate
 ```php
-$fields = new Form\Fields(new Form\Templates\Fields());
+use PHPFuse\Form\Fields;
+use PHPFuse\Form\AbstractFormFields; // You should create you own template file for fields
+
+$fields = new Fields(new AbstractFormFields());
 ```
 ### Basic: You can either quick create one field form the fields template
 $fields->[FIELD_TYPE]->[ARG1]->[ARG2]->get();
@@ -26,6 +28,7 @@ Use the form compiler for advance consistent form creation and validation. Works
 	…
 ]
 ```
+*It is recommended that you make a copy off AbstractFormFields class, make it to a regualar class, rename it and extend it to the real AbstractFormFields abstract class. Then you can start making and adding your own custom input fields.*
 
 ### Field config
 
@@ -105,6 +108,7 @@ $fields->add("userForm", [
 	"email" => [
 		"type" => "text",
 		"label" => "Email",
+		"description" => "We need you email so that we can contact you.",
 		"attr" => [
 			"type" => "email",
 			"placeholder" => "john.doe@hotmail.com"
@@ -181,10 +185,32 @@ $fields->build();
 Now you can read the form.
 ```php
 echo '<form action="index.php" method="post">';
-echo $fields->form("userForm");
+echo $fields->getForm("userForm");
 echo "</form>";
 ```
+#### 5. Validate form
+Now you can read the form.
+```php
+use PHPFuse\Form\Validate;
 
+$fields->build();
+$validate = new Validate($fields, $_POST);
+if($error = $validate->execute()) {
+    // HAS ERROR --> 
+	echo "<pre>";
+    print_r($error);
+    echo "</pre>";
+
+} else {
+	// SUCCESS -->
+	// Return filtered request (will only return values for added input fields)
+	$request = $validate->getRequest(); // Uprotected
+
+	// You can use PHPFues Method to protect request/post for XSS.
+	//\PHPFuse\Http\Method::value($request)->get();
+}
+
+```
 
 
 

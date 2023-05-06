@@ -1,16 +1,16 @@
 <?php 
 /**
- * @Package: 	PHP Fuse - Form builder
+ * @Package: 	PHPFuse - Form builder
  * @Author: 	Daniel Ronkainen
  * @Licence: 	The MIT License (MIT), Copyright © Daniel Ronkainen
  				Don't delete this comment, its part of the license.
- * @Version: 	2.2.1
  */
 namespace PHPFuse\Form;
 
+use PHPFuse\Form\Interfaces\FieldInterface;
 use PHPFuse\Form\Interfaces\FormFieldsInterface;
 
-class Fields {
+class Fields implements FieldInterface {
 
 	private $form;
 	private $fields;
@@ -19,16 +19,16 @@ class Fields {
 	private $inpArr = array();
 	private $values = array();
 	private $buildArr;
-	private $validateArr = array();
+	private $validateData = array();
 
-	static private $_inst;
+	//static private $_inst;
 
 	/**
 	 * Form creator
 	 * @param FormFieldsInterface $fields Form template class
 	 */
 	function __construct(FormFieldsInterface $fields) {
-		self::$_inst = $this;
+		//self::$_inst = $this;
 		$this->fields = $fields;
 	}
 
@@ -55,35 +55,46 @@ class Fields {
 	 * Get forms
 	 * @return array
 	 */
-	function getForms(): array 
+	public function getFormData(): array 
 	{		
 		return $this->inpArr;
 	}
 
 	/**
-	 * Get fields
+	 * Check if form exists
+	 * @param  string  $name Form name
+	 * @return boolean
+	 */
+	public function hasFormData(string $name): bool 
+	{
+		return (bool)(isset($this->inpArr[$name]));
+	}
+
+	/**
+	 * Get fields (will throw Exception if form is missing)
 	 * @param  string $name Form name
 	 * @return array
 	 */
-	function getFields(string $name): array 
+	public function getFields(string $name): array 
 	{		
-		return ($this->inpArr[$name] ?? NULL);
+		if(!$this->hasForm($name)) throw new \Exception("The form does not exists. You need to create a form using the @add method!", 1);
+		return $this->inpArr[$name];
 	}
 
 	/**
 	 * Get fields with resolved group name if needed
 	 * @return array
 	 */
-	function getData() 
+	public function getData(): array
 	{
 		return $this->resolveGrpName();
 	}
 
 	/**
 	 * Set values
-	 * @param void
+	 * @param array|object $values Will be converted to array
 	 */
-	function setValues($values): void 
+	public function setValues(array|object $values): void 
 	{
 		$values = (array)$values;
 		foreach($values as $k => $val) {
@@ -95,7 +106,7 @@ class Fields {
 	 * Get settted values
 	 * @return array
 	 */
-	function getValues(): array 
+	public function getValues(): array 
 	{
 		return $this->values;
 	}
@@ -105,7 +116,7 @@ class Fields {
 	 * @param string $name   Form name
 	 * @param array $fields
 	 */
-	function add(string $name, $fields): self 
+	public function add(string $name, $fields): self 
 	{
 		$this->inpArr[$name] = $fields;
 		return $this;
@@ -117,7 +128,7 @@ class Fields {
 	 * @param  array  $fields
 	 * @return self
 	 */
-	function prepend(string $name, array $fields): self
+	public function prepend(string $name, array $fields): self
 	{
 		$this->inpArr[$name] = array_merge($fields, $this->inpArr[$name]);
 		return $this;
@@ -129,7 +140,7 @@ class Fields {
 	 * @param  array  $fields
 	 * @return self
 	 */
-	function append(string $name, array $fields): self
+	public function append(string $name, array $fields): self
 	{
 		$this->inpArr[$name] = array_merge($this->inpArr[$name], $fields);
 		return $this;
@@ -140,7 +151,7 @@ class Fields {
 	 * @param  string $name Form name
 	 * @return void
 	 */
-	function deleteForm(string $name): void 
+	public function deleteForm(string $name): void 
 	{
 		unset($this->inpArr[$name]);
 	}
@@ -151,7 +162,7 @@ class Fields {
 	 * @param  string $key  Field name
 	 * @return void
 	 */
-	function deleteField(string $name, string $key): void 
+	public function deleteField(string $name, string $key): void 
 	{
 		if(is_array($key)) {
 			$this->findDelete($this->inpArr[$name], $key);
@@ -165,40 +176,61 @@ class Fields {
 	 * @param string $id
 	 * @param array  $arr
 	 */
-	function setValidateArr(string $id, array $arr): void 
+	public function setValidateData(string $id, array $arr): void 
 	{
-		$this->validateArr[$id] = $arr;
+		$this->validateData[$id] = $arr;
 	}
 
 	/**
 	 * Get forms validation options
-	 * @param  string|null $key formKey
 	 * @return array
 	 */
-	function validateArr(?string $key = NULL): array 
+	public function getValidateData(): array 
 	{
-		return (!is_null($key)) ? (isset($this->validateArr[$key]) ? $this->validateArr[$key] : []) : $this->validateArr;
+		return $this->validateData;
 	}
 
 	/**
-	 * Build all form data
-	 * @param  callable|null $callback [description]
-	 * @return [type]                  [description]
+	 * Get forms validation options
+	 * @param  string $key field key
+	 * @return array
 	 */
-	public function build(?callable $callback = NULL) 
+	public function getValidateDataRow(string $key): array 
 	{
-		// Reset validate arr, it will be re-built
-		$this->validateArr = array();
+		return ($this->validateData[$key] ?? NULL);
+	}
+
+	/**
+	 * Build all form data before valiate or read
+	 * This will reset validation data.
+	 * @return void
+	 */
+	public function build(): void 
+	{
+		$this->validateData = array();
 		foreach($this->inpArr as $key => $array) {
-			$this->buildArr[$key] = $this->html($array, $callback);
+			$this->buildArr[$key] = $this->html($array);
 		}
+	}
+
+	/**
+	 * Build all form data before valiate or read (is immutable!)
+	 * This will reset validation data.
+	 * @return static
+	 */
+	public function withBuild(): static 
+	{
+		$inst = clone $this;
+		$inst->build();
+		return $inst;
 	}
 
 	/**
 	 * Quick generate and return single fields
 	 * @return string
 	 */
-	function get() {
+	public function get(): string 
+	{
 		if(!is_null($this->type)) {
 			$get = call_user_func_array([$this->fields, $this->type], $this->args);
 			return $get;
@@ -206,13 +238,25 @@ class Fields {
 	}
 
 	/**
-	 * Get built form
-	 * @param  string $key form key
-	 * @return string|NULL
+	 * Check if form exists
+	 * @param  string $key The form key
+	 * @return bool
 	 */
-	function form(string $key): ?string
+	public function hasForm(string $key): bool
 	{
-		return ($this->buildArr[$key] ?? NULL);
+		return (bool)(isset($this->buildArr[$key]));
+	}
+
+	/**
+	 * Get built form (Will return exception if does not exist!)
+	 * @param  string $key form key
+	 * @return string
+	 */
+	public function getForm(string $key): string
+	{
+		if(!$this->hasFormData($key)) throw new \Exception("The form does not exists. You need to create a form using the @add method!", 1);
+		if(!$this->hasForm($key)) throw new \Exception("The form need to be built with the @withBuild method before you can read it!", 1);
+		return $this->buildArr[$key];
 	}
 
 	/**
@@ -221,7 +265,7 @@ class Fields {
 	 * @param  callable $callback
 	 * @return string
 	 */
-	protected function html(array $inpArr, ?callable $callback = NULL): string 
+	protected function html(array $inpArr): string 
 	{
 		$out = "";
 		foreach($inpArr as $name => $arr) {
@@ -242,7 +286,6 @@ class Fields {
 				$args = $field->rows($arr)->fieldType($arr['type'])->label($label)->description($description)->validate($validate)->config($config)->name($name)->items($items)->value($value)->fields($fields)
 				->attr($attr)->conAttr($conAttr);
 
-				if(!is_null($callback)) $callback($args);
 				$out .= $args->get();
 			}
 		}
@@ -257,8 +300,6 @@ class Fields {
 	 */
 	private function resolveGrpName(): array
 	{
-		//if(!is_array($array)) $array = $this->inpArr;
-
 		$get = array();
 		foreach($this->inpArr as $a1) {
 			foreach($a1 as $k => $a2) {
@@ -313,25 +354,4 @@ class Fields {
 			}
 		}
 	}
-
-
-	// DEPRECATED --> 
-	
-
-	/*
-	function data(?string $key = NULL): array|string 
-	{
-		$arr = $this->resolveGrpName();
-		return (!is_null($key)) ? (isset($arr[$key]) ? $arr[$key] : false) : $arr;
-	}
-
-	function inpArr() {
-		return $this->inpArr;
-	}
-	function getType() {
-		return $this->type;
-	}
-	 */
-	
-
 }
