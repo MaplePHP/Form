@@ -8,6 +8,8 @@ use PHPFuse\Form\AbstractFormFields; // You should create you own template file 
 
 $fields = new Fields(new AbstractFormFields());
 ```
+*It is recommended that you make a copy off AbstractFormFields class, make it to a regualar class, rename it and extend it to the real AbstractFormFields abstract class. Then you can start making and adding your own custom input fields.*
+
 ### Basic: You can either quick create one field form the fields template
 $fields->[FIELD_TYPE]->[ARG1]->[ARG2]->get();
 **FIELD_TYPE:** Method name from Form\Templates\Fields
@@ -28,7 +30,6 @@ Use the form compiler for advance consistent form creation and validation. Works
 	…
 ]
 ```
-*It is recommended that you make a copy off AbstractFormFields class, make it to a regualar class, rename it and extend it to the real AbstractFormFields abstract class. Then you can start making and adding your own custom input fields.*
 
 ### Field config
 
