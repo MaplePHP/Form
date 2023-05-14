@@ -196,16 +196,38 @@ class Arguments {
 		return $this;
 	}
 
-
-	protected function group($autoFixKey = true) {
+	/**
+	 * Group fields / custom fields with dynamic and nested fields names
+	 * @param  callable $callback   	Container room for customization 
+	 * @param  bool 	$manipulateName Manipulate the input field name 
+	 * @return string
+	 */
+	protected function groupFields(callable $callback, bool $manipulateName = true) {
 		$out = "";
 		$fields = array();
-		
-		$o = "";
-		foreach($this->fields as $name => $arr) {
-			$fk = ($autoFixKey) ? "{$this->identifier},{$name}" : $name;
-			$arr['imageID'] = "{$this->grpIdentifier},{$name}";
+		if(!is_array($this->value)) $this->value = array(0); // This will add new value
+		foreach($this->value as $k => $a) {
+			$o = "";
+			foreach($this->fields as $name => $arr) {
+				$fk = ($manipulateName) ? "{$this->identifier},{$k},{$name}" : $name;
+				$fields[$fk] = $arr;
+				$o .= $this->_inst->html($fields);
+				unset($fields);
+			}
+			$out .= $callback($o, $a);
+		}
+		return $out;
+	}
 
+	/**
+	 * This will inherit the parent name and build upon it.
+	 * @return string
+	 */
+	protected function inheritField() {
+		$o = $out = "";
+		$fields = array();
+		foreach($this->fields as $name => $arr) {
+			$fk = "{$this->identifier},{$name}";
 			$fields[$fk] = $arr;
 			$o .= $this->_inst->html($fields);
 			unset($fields);
@@ -213,21 +235,11 @@ class Arguments {
 		return $o;
 	}
 
-	private function json($jsonStr) {
-		if(is_string($jsonStr)) {
-			$array = false;
-			if(function_exists("json_decode_data")) {
-				$array = json_decode_data($jsonStr);
-			
-			} else {
-				$array = json_decode($jsonStr, true);
-				if(!$array) throw new \Exception("JSON ERROR CODE: ".json_last_error(), 1);	
-			}
-			if($array) return $array;
-		}
-		return $jsonStr;
-	}
-
+	/**
+	 * Check if filed is checked/active
+	 * @param  string  $val
+	 * @return boolean
+	 */
 	protected function isChecked($val): bool
 	{
 		if(is_array($this->value)) {
@@ -236,79 +248,36 @@ class Arguments {
 		return (bool)((string)$val === (string)$this->value);
 	}
 
-	// DEPRECATED -->
-
-	function itemValue() {
-		return (isset($this->items[$this->value])) ? $this->items[$this->value] : reset($this->items);
+	/**
+	 * Get the last key can be used with @groupFields to create dynamic custom fields
+	 * Can be used to make the dynamic input name alwas uniqe 
+	 * @return int
+	 */
+	protected function lastKey(): int 
+	{
+		$mk = 0;
+		if(!is_null($this->value) && is_array($this->value)) {
+			$mk = $this->value;
+			krsort($mk);
+			$mk = key($mk);
+		}
+		return $mk;
 	}
 
-	function get_name() {
-		return $this->getName();
-	}
-
-	function get_value() {
-		return $this->getValue();
-	}
-
-	// TEST DO NOT USE
-	protected function buildGrp() {
-		$new = array();
-		if(is_null($this->value)) $this->value = array(0);
-		foreach($this->value as $k => $a) {
-			foreach($this->fields as $name => $arr) {
-				$new["{$this->identifier},{$k},{$name}"] = $arr;
+	/**
+	 * Used in to help make sence of validate data
+	 * @param  mixed $jsonStr
+	 * @return mixed
+	 */
+	private function json($jsonStr) {
+		if(is_string($jsonStr)) {
+			if($data = json_decode($jsonStr, true)) {
+				return $data;
+			} else {
+				throw new \Exception("JSON ERROR CODE: ".json_last_error(), 1);
 			}
 		}
-		return $new;
+		return $jsonStr;
 	}
 
-
-	protected function columns() {
-		$out = "";
-		if(is_array($this->fields)) {
-			ksort($this->fields);
-			foreach($this->fields as $key => $array) {
-				$out .= "<div class=\"col\">";
-				$out .= $this->_inst->html($array);
-				$out .= "</div>";
-			}
-		}
-		return $out;
-	}
-
-	protected function groupFeed($callback, $autoFixKey = true) {
-
-		$out = "";
-		$fields = array();
-		if(!is_array($this->value)) $this->value = array(0);
-
-		foreach($this->value as $k => $a) {
-			$o = "";
-			foreach($this->fields as $name => $arr) {
-				$fk = ($autoFixKey) ? "{$this->identifier},{$k},{$name}" : $name;
-				$arr['imageID'] = "{$this->grpIdentifier},{$name}";
-
-				$fields[$fk] = $arr;
-				$o .= $this->_inst->html($fields);
-				unset($fields);
-			}
-			$out .= $callback($o, $a);
-			
-		}
-		return $out;
-	}
-	protected function groupList($name, $callback) {
-
-		$out = "";
-		$fields = array();
-		if(!is_array($this->value)) $this->value = array("");
-
-		foreach($this->value as $k => $a) {
-			$o = "";
-			$fk = "{$name},";
-			$this->name($fk);
-			$out .= $callback($k, $fk, $a);
-		}
-		return $out;
-	}
 }

@@ -166,5 +166,31 @@ abstract class AbstractFormFields extends Arguments implements FormFieldsInterfa
 	}
 
 
+	/**
+	 * Group fields
+	 * With some know how you can make it dynamical
+	 * @return string/html
+	 */
+	function group() {
+		
+		$mk = $this->lastKey();
+		$out = "<div class=\"holder group\" {$this->attr}data-key=\"{$mk}\">";
+
+		if(!is_null($this->label)) $out .= "<label>{$this->label}</label>";
+		if(!is_null($this->description)) $out .= "<div class=\"legend holder v3\">{$this->description}</div>";
+
+		$out .= "<ul>";
+		$out .= $this->groupFields(function($o, $val) {
+			$out = "<li>";
+			$out .= $o;
+			$out .= "</li>";
+			return $out;
+		});
+
+		$out .= "</ul>";
+		$out .= "</div>";
+
+		return $out;
+	}
 
 }

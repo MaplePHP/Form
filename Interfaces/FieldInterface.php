@@ -76,6 +76,15 @@ interface FieldInterface {
 	 */
 	public function build(): void;
 
+
+	/**
+	 * Build HTML
+	 * @param  array $inpArr
+	 * @param  callable $callback
+	 * @return string/html
+	 */
+	public function html(array $inpArr): string;
+
 	/**
 	 * Build all form data before valiate or read (This is immutable)
 	 * @return static

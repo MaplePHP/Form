@@ -263,9 +263,9 @@ class Fields implements FieldInterface {
 	 * Build HTML
 	 * @param  array $inpArr
 	 * @param  callable $callback
-	 * @return string
+	 * @return string/html
 	 */
-	protected function html(array $inpArr): string 
+	public function html(array $inpArr): string 
 	{
 		$out = "";
 		foreach($inpArr as $name => $arr) {

@@ -10,7 +10,7 @@ use PHPFuse\Output\Format\Local;
 class Validate {
 
 	const WHITELIST_INC_ARR_FIELD = ["list"];
-	const TO_REQURED_FLAG = ["length", "hasLength"];
+	const TO_REQURED_FLAG = ["length", "hasLength", "hasValue", "required"];
 
 	private $validArr;
 	private $fields;
@@ -157,10 +157,10 @@ class Validate {
 	 * Will build a validateable post array from extisting fields
 	 * @param  array         $exp 
 	 * @param  array         &$arr
-	 * @param  array         &$new
+	 * @param  mixed         &$new
 	 * @return mixed (field value)
 	 */
-	protected function buildPostArr(array $exp, array &$arr, array &$new, object $field)
+	protected function buildPostArr(array $exp, array &$arr, mixed &$new, object $field)
 	{
 		$k = array_shift($exp);
 		if(isset($arr[$k])) {
