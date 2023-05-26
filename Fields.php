@@ -13,6 +13,7 @@ use PHPFuse\Form\Interfaces\FormFieldsInterface;
 class Fields implements FieldInterface {
 
 	private $form;
+	private $name = "form";
 	private $fields;
 	private $type;
 	private $args = array();
@@ -65,9 +66,9 @@ class Fields implements FieldInterface {
 	 * @param  string  $name Form name
 	 * @return boolean
 	 */
-	public function hasFormData(string $name): bool 
+	public function hasFormData(): bool 
 	{
-		return (bool)(isset($this->inpArr[$name]));
+		return (bool)(isset($this->inpArr[$this->name]));
 	}
 
 	/**
@@ -75,10 +76,10 @@ class Fields implements FieldInterface {
 	 * @param  string $name Form name
 	 * @return array
 	 */
-	public function getFields(string $name): array 
+	public function getFields(): array 
 	{		
-		if(!$this->hasForm($name)) throw new \Exception("The form does not exists. You need to create a form using the @add method!", 1);
-		return $this->inpArr[$name];
+		if(!$this->hasForm($this->name)) throw new \Exception("The form does not exists. You need to create a form using the @add method!", 1);
+		return $this->inpArr[$this->name];
 	}
 
 	/**
@@ -116,9 +117,9 @@ class Fields implements FieldInterface {
 	 * @param string $name   Form name
 	 * @param array $fields
 	 */
-	public function add(string $name, $fields): self 
+	public function add($fields): self 
 	{
-		$this->inpArr[$name] = $fields;
+		$this->inpArr[$this->name] = $fields;
 		return $this;
 	}
 
@@ -128,9 +129,9 @@ class Fields implements FieldInterface {
 	 * @param  array  $fields
 	 * @return self
 	 */
-	public function prepend(string $name, array $fields): self
+	public function prepend(array $fields): self
 	{
-		$this->inpArr[$name] = array_merge($fields, $this->inpArr[$name]);
+		$this->inpArr[$this->name] = array_merge($fields, $this->inpArr[$name]);
 		return $this;
 	}
 
@@ -140,9 +141,9 @@ class Fields implements FieldInterface {
 	 * @param  array  $fields
 	 * @return self
 	 */
-	public function append(string $name, array $fields): self
+	public function append(array $fields): self
 	{
-		$this->inpArr[$name] = array_merge($this->inpArr[$name], $fields);
+		$this->inpArr[$this->name] = array_merge($this->inpArr[$name], $fields);
 		return $this;
 	}
 
@@ -151,9 +152,9 @@ class Fields implements FieldInterface {
 	 * @param  string $name Form name
 	 * @return void
 	 */
-	public function deleteForm(string $name): void 
+	public function deleteForm(): void 
 	{
-		unset($this->inpArr[$name]);
+		unset($this->inpArr[$this->name]);
 	}
 
 	/**
@@ -242,9 +243,9 @@ class Fields implements FieldInterface {
 	 * @param  string $key The form key
 	 * @return bool
 	 */
-	public function hasForm(string $key): bool
+	public function hasForm(): bool
 	{
-		return (bool)(isset($this->buildArr[$key]));
+		return (bool)(isset($this->buildArr[$this->name]));
 	}
 
 	/**
@@ -252,11 +253,11 @@ class Fields implements FieldInterface {
 	 * @param  string $key form key
 	 * @return string
 	 */
-	public function getForm(string $key): string
+	public function getForm(): string
 	{
-		if(!$this->hasFormData($key)) throw new \Exception("The form does not exists. You need to create a form using the @add method!", 1);
-		if(!$this->hasForm($key)) throw new \Exception("The form need to be built with the @withBuild method before you can read it!", 1);
-		return $this->buildArr[$key];
+		if(!$this->hasFormData($this->name)) throw new \Exception("The form does not exists. You need to create a form using the @add method!", 1);
+		if(!$this->hasForm($this->name)) throw new \Exception("The form need to be built with the @withBuild method before you can read it!", 1);
+		return $this->buildArr[$this->name];
 	}
 
 	/**

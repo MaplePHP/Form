@@ -20,14 +20,14 @@ interface FieldInterface {
 	 * @param  string  $name Form name
 	 * @return boolean
 	 */
-	public function hasFormData(string $name): bool;
+	public function hasFormData(): bool;
 
 	/**
 	 * Get fields (will throw Exception if form is missing)
 	 * @param  string $name Form name
 	 * @return array
 	 */
-	public function getFields(string $name): array;
+	public function getFields(): array;
 
 	/**
 	 * Set values
@@ -46,7 +46,7 @@ interface FieldInterface {
 	 * @param string $name   Form name
 	 * @param array $fields
 	 */
-	public function add(string $name, $fields): self;
+	public function add($fields): self;
 
 	/**
 	 * Set validation array
@@ -102,14 +102,14 @@ interface FieldInterface {
 	 * @param  string $key The form key
 	 * @return bool
 	 */
-	public function hasForm(string $key): bool;
+	public function hasForm(): bool;
 
 	/**
 	 * Get built form (Will return exception if does not exist!)
 	 * @param  string $key form key
 	 * @return string
 	 */
-	public function getForm(string $key): string;
+	public function getForm(): string;
 
 
 }
