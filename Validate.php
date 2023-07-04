@@ -5,7 +5,7 @@ namespace PHPFuse\Form;
 use PHPFuse\Form\Interfaces\FieldInterface;
 
 use PHPFuse\Validate\Inp;
-use PHPFuse\Output\Format\Local;
+use PHPFuse\DTO\Format\Local;
 
 class Validate {
 
