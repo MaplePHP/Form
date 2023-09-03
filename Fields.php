@@ -35,8 +35,8 @@ class Fields implements FieldInterface {
 
 	/**
 	 * Quick create and return field (Chainable resource)
-	 * @param  string $a [description]
-	 * @param  array $b [description]
+	 * @param  string $a
+	 * @param  array $b
 	 * @return self
 	 */
 	function __call($a, $b) {
@@ -50,6 +50,17 @@ class Fields implements FieldInterface {
 		$this->type = $a;
 		$this->args = $b;
 		return $this->fields;
+	}
+
+	/**
+	 * You can create a new form
+	 * @param static
+	 */
+	public function createForm(string $name): self 
+	{
+		$clone = clone $this;
+		$clone->name = $name;
+		return $clone;
 	}
 
 	/**
@@ -131,7 +142,7 @@ class Fields implements FieldInterface {
 	 */
 	public function prepend(array $fields): self
 	{
-		$this->inpArr[$this->name] = array_merge($fields, $this->inpArr[$name]);
+		$this->inpArr[$this->name] = array_merge($fields, $this->inpArr[$this->name]);
 		return $this;
 	}
 
@@ -143,7 +154,7 @@ class Fields implements FieldInterface {
 	 */
 	public function append(array $fields): self
 	{
-		$this->inpArr[$this->name] = array_merge($this->inpArr[$name], $fields);
+		$this->inpArr[$this->name] = array_merge($this->inpArr[$this->name], $fields);
 		return $this;
 	}
 
@@ -163,12 +174,12 @@ class Fields implements FieldInterface {
 	 * @param  string $key  Field name
 	 * @return void
 	 */
-	public function deleteField(string $name, string $key): void 
+	public function deleteField(string $key): void 
 	{
 		if(is_array($key)) {
-			$this->findDelete($this->inpArr[$name], $key);
+			$this->findDelete($this->inpArr[$this->name], $key);
 		} else {
-			if(isset($this->inpArr[$name][$key])) unset($this->inpArr[$name][$key]);
+			if(isset($this->inpArr[$this->name][$key])) unset($this->inpArr[$this->name][$key]);
 		}
 	}
 
@@ -232,10 +243,11 @@ class Fields implements FieldInterface {
 	 */
 	public function get(): string 
 	{
-		if(!is_null($this->type)) {
+		if(!is_null($this->type) && method_exists($this->fields, $this->type)) {
 			$get = call_user_func_array([$this->fields, $this->type], $this->args);
 			return $get;
 		}
+		return "";
 	}
 
 	/**
