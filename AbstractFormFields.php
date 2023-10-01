@@ -22,7 +22,7 @@ abstract class AbstractFormFields extends Arguments implements FormFieldsInterfa
 	{
 
 		$length = count($this->items);
-		$this->conAttrArr['class'] = trim("holder ".($this->conAttrArr['class'] ?? ""));
+		$this->conAttrArr['class'] = trim("mb-20 ".($this->conAttrArr['class'] ?? ""));
 		$attr = $this->getConAttr();
 
 		$out = "";
@@ -174,10 +174,10 @@ abstract class AbstractFormFields extends Arguments implements FormFieldsInterfa
 	function group() {
 		
 		$mk = $this->lastKey();
-		$out = "<div class=\"holder group\" {$this->attr}data-key=\"{$mk}\">";
+		$out = "<div class=\"mb-20 group\" {$this->attr}data-key=\"{$mk}\">";
 
 		if(!is_null($this->label)) $out .= "<label>{$this->label}</label>";
-		if(!is_null($this->description)) $out .= "<div class=\"legend holder v3\">{$this->description}</div>";
+		if(!is_null($this->description)) $out .= "<div class=\"legend mb-20 v3\">{$this->description}</div>";
 
 		$out .= "<ul>";
 		$out .= $this->groupFields(function($o, $val) {
