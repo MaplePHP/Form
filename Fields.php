@@ -22,14 +22,11 @@ class Fields implements FieldInterface {
 	private $buildArr;
 	private $validateData = array();
 
-	//static private $_inst;
-
 	/**
 	 * Form creator
 	 * @param FormFieldsInterface $fields Form template class
 	 */
 	function __construct(FormFieldsInterface $fields) {
-		//self::$_inst = $this;
 		$this->fields = $fields;
 	}
 
@@ -53,14 +50,34 @@ class Fields implements FieldInterface {
 	}
 
 	/**
-	 * You can create a new form
+	 * You can split the form into multiple partials with the help with withForm or new instance
+	 * Every form partial will then be validate
+	 * @param self
+	 */
+	public function setPartial(FieldInterface $inst): self 
+	{
+		$this->add($inst->getFields(), $inst->getFormName());
+		return $this;
+	}
+
+	/**
+	 * You can create a new form 
 	 * @param static
 	 */
-	public function createForm(string $name): self 
+	public function withForm($name): self 
 	{
 		$clone = clone $this;
 		$clone->name = $name;
 		return $clone;
+	}
+
+	/**
+	 * Get form name
+	 * @return string
+	 */
+	public function getFormName(): string 
+	{		
+		return $this->name;
 	}
 
 	/**
@@ -89,8 +106,8 @@ class Fields implements FieldInterface {
 	 */
 	public function getFields(): array 
 	{		
-		if(!$this->hasForm($this->name)) throw new \Exception("The form does not exists. You need to create a form using the @add method!", 1);
-		return $this->inpArr[$this->name];
+		//if(!$this->hasForm($this->name)) throw new \Exception("The form does not exists. You need to create a form using the @add method!", 1);
+		return ($this->inpArr[$this->name] ?? []);
 	}
 
 	/**
@@ -110,7 +127,8 @@ class Fields implements FieldInterface {
 	{
 		$values = (array)$values;
 		foreach($values as $k => $val) {
-			if(is_array($val) || strlen($val)) $this->values[$k] = $val;
+			if(!is_array($val)) $val = (string)$val;
+			$this->values[$k] = $val;
 		}
 	}
 
@@ -128,9 +146,10 @@ class Fields implements FieldInterface {
 	 * @param string $name   Form name
 	 * @param array $fields
 	 */
-	public function add($fields): self 
+	public function add($fields, ?string $name = NULL): self 
 	{
-		$this->inpArr[$this->name] = $fields;
+		if(is_null($name)) $name = $this->name;
+		$this->inpArr[$name] = $fields;
 		return $this;
 	}
 
@@ -255,9 +274,10 @@ class Fields implements FieldInterface {
 	 * @param  string $key The form key
 	 * @return bool
 	 */
-	public function hasForm(): bool
+	public function hasForm(?string $name = NULL): bool
 	{
-		return (bool)(isset($this->buildArr[$this->name]));
+		if(is_null($name)) $name = $this->name;
+		return (bool)(isset($this->buildArr[$name]));
 	}
 
 	/**
@@ -265,11 +285,13 @@ class Fields implements FieldInterface {
 	 * @param  string $key form key
 	 * @return string
 	 */
-	public function getForm(): string
+	public function getForm(?string $name = NULL): string
 	{
-		if(!$this->hasFormData($this->name)) throw new \Exception("The form does not exists. You need to create a form using the @add method!", 1);
-		if(!$this->hasForm($this->name)) throw new \Exception("The form need to be built with the @withBuild method before you can read it!", 1);
-		return $this->buildArr[$this->name];
+
+		if(is_null($name)) $name = $this->name;
+		if(!$this->hasFormData($name)) throw new \Exception("The form does not exists. You need to create a form using the @add method!", 1);
+		if(!$this->hasForm($name)) throw new \Exception("The form need to be built with the @withBuild method before you can read it!", 1);
+		return $this->buildArr[$name];
 	}
 
 	/**
