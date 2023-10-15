@@ -82,7 +82,7 @@ class Validate {
 		$arr = $this->fields->getValidateData();
 		foreach($arr as $name => $arr) {
 			$field = $this->fields->{$arr['type']}();
-			$input = $field->name($name)->fieldType($arr['type'])->value(false);
+			$input = $field->name($name)->fieldType($arr['type'])->value(false)->default($arr['default'] ?? NULL);
 			$nameKey = $input->getName();
 			$exp = explode(",", $name);
 
@@ -182,10 +182,14 @@ class Validate {
 					if(isset($arr[$k][0]) && is_string($arr[$k][0]) && in_array($field->getFieldType(), static::WHITELIST_INC_ARR_FIELD)) {
 						$new[$k] = $arr[$k];
 						return $arr[$k];
+					} else {
+						$new[$k] = $field->getDefault();
 					}
 				}
 				return NULL;
 			}
+		} else {
+			$new[$k] = $field->getDefault();
 		}
 	}
 

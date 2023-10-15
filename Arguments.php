@@ -19,6 +19,7 @@ class Arguments {
 	protected $identifier;
 	protected $grpIdentifier;
 	protected $value;
+	protected $default;
 	protected $header;
 	protected $label;
 	protected $description;
@@ -41,13 +42,12 @@ class Arguments {
 	protected $nameExp; // Used to get value
 	protected $dataName;
 
-	protected $inst;
 	protected $level = 1;
-	protected $_inst;
+	protected $inst;
 	
 	
 	function inst($inst) {
-		$this->_inst = $inst;
+		$this->inst = $inst;
 		return $this;
 	}
 
@@ -63,10 +63,13 @@ class Arguments {
 		return $this->value;
 	}
 	
+	function getDefault() {
+		return $this->default;
+	}
 
 	function get() {
 		$this->value();
-		return $this->_inst->get();
+		return $this->inst->get();
 	}
 
 	function fieldType(string $fieldType) {
@@ -132,17 +135,22 @@ class Arguments {
 		return $this;
 	}
 
+	function default($default) {
+		if(!is_null($default)) $this->default = $default;
+		return $this;
+	}
+
 	function description($description) {
 		if($description) $this->description = $description;
 		return $this;
 	}
 
 	function request() {
-		return $this->_inst->request;
+		return $this->inst->request;
 	}
 
 	function values() {
-		return $this->_inst->getValues();
+		return $this->inst->getValues();
 	}
 
 	function name($name) {
@@ -153,10 +161,11 @@ class Arguments {
 		$this->grpIdentifier = preg_replace('/(,[0-9])+/', '', $this->grpIdentifier);
 
 
-		$this->_inst->setValidateData($this->identifier, [
+		$this->inst->setValidateData($this->identifier, [
 			"id" => ($this->rows['id'] ?? 0),
 			"type" => (!is_null($this->fieldType) ? $this->fieldType : "text"),
 			"validate" => $this->validate,
+			"default" => $this->default,
 			"config" => $this->config
 		]);
 		
@@ -174,7 +183,7 @@ class Arguments {
 
 		} elseif(is_array($this->nameExp) && count($this->nameExp) > 0) {
 
-			$values = $this->_inst->getValues();
+			$values = $this->inst->getValues();
 			if(!is_null($values)) {
 				$values = (array)$values;
 				$exp = $this->nameExp;
@@ -211,7 +220,7 @@ class Arguments {
 			foreach($this->fields as $name => $arr) {
 				$fk = ($manipulateName) ? "{$this->identifier},{$k},{$name}" : $name;
 				$fields[$fk] = $arr;
-				$o .= $this->_inst->html($fields);
+				$o .= $this->inst->html($fields);
 				unset($fields);
 			}
 			$out .= $callback($o, $a);
@@ -229,7 +238,7 @@ class Arguments {
 		foreach($this->fields as $name => $arr) {
 			$fk = "{$this->identifier},{$name}";
 			$fields[$fk] = $arr;
-			$o .= $this->_inst->html($fields);
+			$o .= $this->inst->html($fields);
 			unset($fields);
 		}		
 		return $o;

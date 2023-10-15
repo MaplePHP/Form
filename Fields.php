@@ -307,6 +307,7 @@ class Fields implements FieldInterface {
 			if(isset($arr['type'])) {
 				$field = $this->{$arr['type']}();
 				$value = (isset($arr['value'])) ? $arr['value'] : false;
+				$default = ($arr['default'] ?? NULL);
 				$attr = (isset($arr['attr'])) ? $arr['attr'] : false;
 				$label = (isset($arr['label'])) ? $arr['label'] : false;
 				$description = (isset($arr['description'])) ? $arr['description'] : false;
@@ -318,7 +319,7 @@ class Fields implements FieldInterface {
 				$conAttr = (isset($arr['conAttr'])) ? $arr['conAttr'] : false;
 				$validate = (isset($arr['validate'])) ? $arr['validate'] : array();
 
-				$args = $field->rows($arr)->fieldType($arr['type'])->label($label)->description($description)->validate($validate)->config($config)->name($name)->items($items)->value($value)->fields($fields)
+				$args = $field->rows($arr)->default($default)->fieldType($arr['type'])->label($label)->description($description)->validate($validate)->config($config)->name($name)->items($items)->value($value)->fields($fields)
 				->attr($attr)->conAttr($conAttr);
 
 				$out .= $args->get();
