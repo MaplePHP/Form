@@ -23,11 +23,9 @@ abstract class AbstractFormFields extends Arguments implements FormFieldsInterfa
     {
 
         $length = count($this->items);
-        $this->conAttrArr['class'] = trim("mb-20 ".($this->conAttrArr['class'] ?? ""));
-        $attr = $this->getConAttr();
 
         $out = "";
-        $out .= "<div {$attr}data-count=\"{$length}\">";
+        $out .= "<div class=\"mb-15\" data-count=\"{$length}\">";
         if (!is_null($this->label)) {
             $boolLength = (isset($this->validate['length'][0]) && $this->validate['length'][0] > 0);
             $boolHasLength = (isset($this->validate['hasLength'][1]) && $this->validate['hasLength'][1] > 0);

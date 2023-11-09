@@ -206,9 +206,6 @@ if($error = $validate->execute()) {
 	// SUCCESS -->
 	// Return filtered request (will only return values for added input fields)
 	$request = $validate->getRequest(); // Uprotected
-
-	// You can use PHPFues Method to protect request/post for XSS.
-	//\PHPFuse\Http\Method::value($request)->get();
 }
 
 ```

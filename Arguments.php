@@ -1,91 +1,62 @@
 <?php
-
 /**
  * @Package:    PHPFuse - Form builder engine
  * @Author:     Daniel Ronkainen
  * @Licence:    The MIT License (MIT), Copyright © Daniel Ronkainen
                 Don't delete this comment, its part of the license.
  */
-
 namespace PHPFuse\Form;
 
-class Arguments
+class Arguments extends AbstractArguments
 {
-    protected $rows = array();
-    protected $fieldType;
-    protected $attr;
-    protected $attrArr = array();
-    protected $name;
-
-    protected $identifier;
     protected $grpIdentifier;
-    protected $value;
-    protected $default;
-    protected $header;
-    protected $label;
-    protected $description;
-    protected $exclude;
-    protected $validate = array();
-
-    // Container
-    protected $class;
-    protected $conAttr;
-    protected $conAttrArr = array();
-
-
-    protected $items = array();
-    protected $config = array();
-    protected $fields = array();
-
-
     protected $count = 0;
-
-    protected $nameExp; // Used to get value
+    protected $nameExp;
     protected $dataName;
 
-    protected $level = 1;
-    protected $inst;
-
-
-    public function inst($inst)
+    /**
+     * Add label to field
+     * @param  string $label
+     * @return self
+     */
+    public function label(?string $label): self
     {
-        $this->inst = $inst;
+        if ($label) {
+            $this->label = $label;
+        }
         return $this;
     }
 
-    public function getFieldType()
+    /**
+     * Add description to field
+     * @param  string $label
+     * @return self
+     */
+    public function description(?string $description): self
     {
-        return $this->fieldType;
+        if ($description) {
+            $this->description = $description;
+        }
+        return $this;
     }
 
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-    public function getDefault()
-    {
-        return $this->default;
-    }
-
-    public function get()
-    {
-        $this->value();
-        return $this->inst->get();
-    }
-
-    public function fieldType(string $fieldType)
+    /**
+     * Set text fields type
+     * @param  string $fieldType
+     * @return self
+     */
+    public function fieldType(?string $fieldType): self
     {
         $this->fieldType = $fieldType;
         return $this;
     }
 
-    public function attr($arr)
+    /**
+     * Set field attribute
+     * @param  array|bool   $arr
+     * @return self
+     */
+    public function attr(array $arr): self
     {
         if (is_array($arr)) {
             $this->attrArr = array_merge($this->attrArr, $arr);
@@ -94,34 +65,12 @@ class Arguments
         return $this;
     }
 
-    public function setAttr()
-    {
-        $this->attr = "";
-        foreach ($this->attrArr as $key => $value) {
-            $this->attr .= "{$key}=\"{$value}\" ";
-        }
-        return $this->attr;
-    }
-
-    public function conAttr($arr)
-    {
-        if (is_array($arr)) {
-            $this->conAttrArr = array_merge($this->conAttrArr, $arr);
-            //$this->setConAttr();
-        }
-        return $this;
-    }
-
-    public function getConAttr()
-    {
-        $this->conAttr = "";
-        foreach ($this->conAttrArr as $key => $value) {
-            $this->conAttr .= "{$key}=\"{$value}\" ";
-        }
-        return $this->conAttr;
-    }
-
-    public function config($arr)
+    /**
+     * Pass extra configs to fields
+     * @param  array $arr
+     * @return self
+     */
+    public function config(array $arr): self
     {
         if (is_array($arr)) {
             $this->config = array_merge($this->config, $arr);
@@ -129,15 +78,12 @@ class Arguments
         return $this;
     }
 
-    public function rows($arr)
-    {
-        if (is_array($arr)) {
-            $this->rows = array_merge($this->rows, $arr);
-        }
-        return $this;
-    }
-
-    public function items($arr)
+    /**
+     * Add items to e.g. select list, checkboxes or radio
+     * @param  array  $arr
+     * @return self
+     */
+    public function items(array $arr): self
     {
         if (is_array($arr)) {
             $this->items = $arr;
@@ -145,7 +91,12 @@ class Arguments
         return $this;
     }
 
-    public function fields($arr)
+    /**
+     * Add fields to group
+     * @param  array $arr
+     * @return self
+     */
+    public function fields(array $arr): self
     {
         if (is_array($arr)) {
             $this->fields = $arr;
@@ -153,7 +104,12 @@ class Arguments
         return $this;
     }
 
-    public function validate($arr)
+    /**
+     * Set Validation to field
+     * @param  array $arr
+     * @return self
+     */
+    public function validate(array $arr): self
     {
         if (is_array($arr)) {
             $this->validate = $arr;
@@ -161,15 +117,12 @@ class Arguments
         return $this;
     }
 
-    public function label($label)
-    {
-        if ($label) {
-            $this->label = $label;
-        }
-        return $this;
-    }
-
-    public function default($default)
+    /**
+     * Set default value if empty e.g "" or 0
+     * @param  string|null $default
+     * @return self
+     */
+    public function default(?string $default): self
     {
         if (!is_null($default)) {
             $this->default = $default;
@@ -177,32 +130,18 @@ class Arguments
         return $this;
     }
 
-    public function description($description)
-    {
-        if ($description) {
-            $this->description = $description;
-        }
-        return $this;
-    }
-
-    public function request()
-    {
-        return $this->inst->request;
-    }
-
-    public function values()
-    {
-        return $this->inst->getValues();
-    }
-
-    public function name($name)
+    /**
+     * Set field name
+     * @param  string $name
+     * @return self
+     */
+    public function name($name): self
     {
         $this->grpIdentifier = $this->identifier = trim($name);
         $this->nameExp = $exp = explode(",", $this->identifier);
         $this->name = array_shift($exp);
         $this->dataName = end($this->nameExp);
         $this->grpIdentifier = preg_replace('/(,[0-9])+/', '', $this->grpIdentifier);
-
 
         $this->inst->setValidateData($this->identifier, [
             "id" => ($this->rows['id'] ?? 0),
@@ -218,11 +157,14 @@ class Arguments
         return $this;
     }
 
-
-
-    public function value($val = false)
+    /**
+     * Set field value
+     * @param  boolean $val
+     * @return self
+     */
+    public function value(?string $val = null): self
     {
-        if ($val !== false) {
+        if (!is_null($val)) {
             $this->value = $val;
         } elseif (is_array($this->nameExp) && count($this->nameExp) > 0) {
             $values = $this->inst->getValues();
@@ -245,94 +187,5 @@ class Arguments
         }
 
         return $this;
-    }
-
-    /**
-     * Group fields / custom fields with dynamic and nested fields names
-     * @param  callable $callback       Container room for customization
-     * @param  bool     $manipulateName Manipulate the input field name
-     * @return string
-     */
-    protected function groupFields(callable $callback, bool $manipulateName = true)
-    {
-        $out = "";
-        $fields = array();
-        if (!is_array($this->value)) {
-            $this->value = array(0);
-        } // This will add new value
-        foreach ($this->value as $k => $a) {
-            $o = "";
-            foreach ($this->fields as $name => $arr) {
-                $fk = ($manipulateName) ? "{$this->identifier},{$k},{$name}" : $name;
-                $fields[$fk] = $arr;
-                $o .= $this->inst->html($fields);
-                unset($fields);
-            }
-            $out .= $callback($o, $a);
-        }
-        return $out;
-    }
-
-    /**
-     * This will inherit the parent name and build upon it.
-     * @return string
-     */
-    protected function inheritField()
-    {
-        $o = $out = "";
-        $fields = array();
-        foreach ($this->fields as $name => $arr) {
-            $fk = "{$this->identifier},{$name}";
-            $fields[$fk] = $arr;
-            $o .= $this->inst->html($fields);
-            unset($fields);
-        }
-        return $o;
-    }
-
-    /**
-     * Check if filed is checked/active
-     * @param  string  $val
-     * @return boolean
-     */
-    protected function isChecked($val): bool
-    {
-        if (is_array($this->value)) {
-            return (bool)in_array((string)$val, $this->value);
-        }
-        return (bool)((string)$val === (string)$this->value);
-    }
-
-    /**
-     * Get the last key can be used with @groupFields to create dynamic custom fields
-     * Can be used to make the dynamic input name alwas uniqe
-     * @return int
-     */
-    protected function lastKey(): int
-    {
-        $mk = 0;
-        if (!is_null($this->value) && is_array($this->value)) {
-            $mk = $this->value;
-            krsort($mk);
-            $mk = key($mk);
-        }
-        return $mk;
-    }
-
-    /**
-     * Used in to help make sence of validate data
-     * @param  mixed $jsonStr
-     * @return mixed
-     */
-    private function json($jsonStr)
-    {
-        if (is_string($jsonStr)) {
-            if ($data = json_decode($jsonStr, true)) {
-                return $data;
-            } else {
-                throw new \Exception("JSON ERROR CODE: ".json_last_error(), 1);
-            }
-        }
-        return $jsonStr;
     }
 }

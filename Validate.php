@@ -18,6 +18,9 @@ class Validate
     private $request = array();
     private $files = array();
     private $local;
+    private $value;
+    private $length = 0;
+    private $validate;
 
     /**
      * Built to auto validate FieldInterface fields
@@ -91,7 +94,11 @@ class Validate
 
             if (!is_array($value)) {
                 if (isset($arr['validate'])) {
-                    if ($error = $this->isInvalid($arr['validate'], htmlspecialchars((string)$value))) {
+                    $this->value = htmlspecialchars((string)$value);
+                    $this->length = strlen($this->value);
+                    $this->validate = Inp::value($this->value);
+
+                    if ($error = $this->isInvalid($arr['validate'])) {
                         $this->validArr[$nameKey] = $error;
                     }
                 }
@@ -108,10 +115,8 @@ class Validate
      * @param  string $value Field value to be validated
      * @return boolean|array
      */
-    protected function isInvalid($arr, $value): bool|array
+    protected function isInvalid($arr): bool|array
     {
-        $valid = Inp::value($value);
-
         if (is_array($arr)) {
             foreach ($arr as $method => $args) {
                 $valFilledIn = false;
@@ -120,29 +125,50 @@ class Validate
                     $method = substr($method, 1);
                 }
 
-                if (method_exists($valid, $method)) {
-                    if (!is_array($args)) {
-                        $args = array();
-                    }
-                    $object = call_user_func_array([$valid, $method], $args);
-                    if (($valFilledIn && strlen($value) > 0 && !$object) || (!$valFilledIn && !$object)) {
+                if (method_exists($this->validate, $method)) {
+                    if ($this->validateWithMethod($method, $args, $valFilledIn)) {
                         if (in_array($method, self::TO_REQURED_FLAG)) {
-                            $length = strlen($value);
-                            if ($length === 0) {
+                            if ($this->length === 0) {
                                 $method = "required";
                             }
                         }
-
-                        return ["type" => $method, "args" => $args, "message" => $this->message($method, $args)];
+                        return $this->buildMessage($method, $args, $this->message($method, $args));
                     }
                 } else {
-                    return ["type" => $method, "args" => $args,
-                    "message" => "Validation method ({$method}) does not exist"];
+                    $message = "Validation method ({$method}) does not exist";
+                    return $this->buildMessage($method, $args, $message);
                 }
             }
         }
-
         return false;
+    }
+
+    /**
+     * Validate with the validation library
+     * @param  string $method
+     * @param  array  $args
+     * @param  bool   $valFilledIn
+     * @return bool
+     */
+    private function validateWithMethod(string $method, ?array $args, bool $valFilledIn): bool
+    {
+        if (!is_array($args)) {
+            $args = array();
+        }
+        $object = call_user_func_array([$this->validate, $method], $args);
+        return (bool)(($valFilledIn && $this->length > 0 && !$object) || (!$valFilledIn && !$object));
+    }
+
+    /**
+     * Build response structure
+     * @param  string $method
+     * @param  array  $args
+     * @param  string $message
+     * @return array
+     */
+    private function buildMessage(string $method, ?array $args, string $message): array
+    {
+        return ["type" => $method, "args" => $args, "message" => $message];
     }
 
     /**
@@ -168,33 +194,33 @@ class Validate
      */
     protected function buildPostArr(array $exp, array &$arr, mixed &$new, object $field)
     {
-        $k = array_shift($exp);
-        if (isset($arr[$k])) {
+        $firstKey = array_shift($exp);
+        if (isset($arr[$firstKey])) {
             if (count($exp) > 0) {
-                //if(isset($new[$k])) $new[$k] = [];
-                return $this->buildPostArr($exp, $arr[$k], $new[$k], $field);
+                //if(isset($new[$firstKey])) $new[$firstKey] = [];
+                return $this->buildPostArr($exp, $arr[$firstKey], $new[$firstKey], $field);
             } else {
                 // Pass _FILE value to array
-                if (isset($arr[$k]['tmp_name'])) {
-                    $this->files[$k] = $arr[$k];
-                    return $arr[$k];
-                } elseif (!is_array($arr[$k])) {
-                    $new[$k] = $arr[$k];
-                    return $arr[$k];
+                if (isset($arr[$firstKey]['tmp_name'])) {
+                    $this->files[$firstKey] = $arr[$firstKey];
+                    return $arr[$firstKey];
+                } elseif (!is_array($arr[$firstKey])) {
+                    $new[$firstKey] = $arr[$firstKey];
+                    return $arr[$firstKey];
                 } else {
                     // Pass on incremental values from field type
-                    if (isset($arr[$k][0]) && is_string($arr[$k][0]) &&
+                    if (isset($arr[$firstKey][0]) && is_string($arr[$firstKey][0]) &&
                         in_array($field->getFieldType(), static::WHITELIST_INC_ARR_FIELD)) {
-                        $new[$k] = $arr[$k];
-                        return $arr[$k];
+                        $new[$firstKey] = $arr[$firstKey];
+                        return $arr[$firstKey];
                     } else {
-                        $new[$k] = $field->getDefault();
+                        $new[$firstKey] = $field->getDefault();
                     }
                 }
                 return null;
             }
         } else {
-            $new[$k] = $field->getDefault();
+            $new[$firstKey] = $field->getDefault();
         }
     }
 }

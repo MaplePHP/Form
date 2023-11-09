@@ -10,70 +10,13 @@
 namespace PHPFuse\Form;
 
 use PHPFuse\Form\Interfaces\FieldInterface;
-use PHPFuse\Form\Interfaces\FormFieldsInterface;
 
-class Fields implements FieldInterface
+class Fields extends AbstractFields implements FieldInterface
 {
-    private $form;
+    //private $form;
     private $name = "form";
-    private $fields;
-    private $type;
-    private $args = array();
-    private $inpArr = array();
-    private $values = array();
     private $buildArr;
     private $validateData = array();
-
-    /**
-     * Form creator
-     * @param FormFieldsInterface $fields Form template class
-     */
-    public function __construct(FormFieldsInterface $fields)
-    {
-        $this->fields = $fields;
-    }
-
-    /**
-     * Quick create and return field (Chainable resource)
-     * @param  string $a
-     * @param  array $b
-     * @return self
-     */
-    public function __call($a, $b)
-    {
-        // Reset build instance
-        if (!is_null($this->type)) {
-            $class = get_class($this->fields);
-            $this->fields = new $class();
-        }
-
-        $this->fields->inst($this);
-        $this->type = $a;
-        $this->args = $b;
-        return $this->fields;
-    }
-
-    /**
-     * You can split the form into multiple partials with the help with withForm or new instance
-     * Every form partial will then be validate
-     * @param self
-     */
-    public function setPartial(FieldInterface $inst): self
-    {
-        $this->add($inst->getFields(), $inst->getFormName());
-        return $this;
-    }
-
-    /**
-     * You can create a new form
-     * @param static
-     */
-    public function withForm($name): self
-    {
-        $clone = clone $this;
-        $clone->name = $name;
-        return $clone;
-    }
 
     /**
      * Get form name
@@ -122,20 +65,7 @@ class Fields implements FieldInterface
         return $this->resolveGrpName();
     }
 
-    /**
-     * Set values
-     * @param array|object $values Will be converted to array
-     */
-    public function setValues(array|object $values): void
-    {
-        $values = (array)$values;
-        foreach ($values as $k => $val) {
-            if (!is_array($val)) {
-                $val = (string)$val;
-            }
-            $this->values[$k] = $val;
-        }
-    }
+    
 
     /**
      * Get settted values
@@ -213,12 +143,12 @@ class Fields implements FieldInterface
 
     /**
      * Set validation array
-     * @param string $id
+     * @param string $key
      * @param array  $arr
      */
-    public function setValidateData(string $id, array $arr): void
+    public function setValidateData(string $key, array $arr): void
     {
-        $this->validateData[$id] = $arr;
+        $this->validateData[$key] = $arr;
     }
 
     /**
@@ -323,89 +253,16 @@ class Fields implements FieldInterface
         foreach ($inpArr as $name => $arr) {
             if (isset($arr['type'])) {
                 $field = $this->{$arr['type']}();
-                $value = (isset($arr['value'])) ? $arr['value'] : false;
-                $default = ($arr['default'] ?? null);
-                $attr = (isset($arr['attr'])) ? $arr['attr'] : false;
-                $label = (isset($arr['label'])) ? $arr['label'] : false;
-                $description = (isset($arr['description'])) ? $arr['description'] : false;
-                $config = (isset($arr['config'])) ? $arr['config'] : array();
-                $items = (isset($arr['items'])) ? $arr['items'] : array();
-
-
-                $fields = (isset($arr['fields'])) ? $arr['fields'] : array();
-                $conAttr = (isset($arr['conAttr'])) ? $arr['conAttr'] : false;
-                $validate = (isset($arr['validate'])) ? $arr['validate'] : array();
-
-                $args = $field->rows($arr)->default($default)->fieldType($arr['type'])->label($label)
-                ->description($description)->validate($validate)->config($config)->name($name)->items($items)
-                ->value($value)->fields($fields)->attr($attr)->conAttr($conAttr);
-
+                $args = $field->default(($arr['default'] ?? null))
+                ->fieldType($arr['type'])
+                ->validate(((isset($arr['validate'])) ? $arr['validate'] : []))->name($name);
+                foreach (static::LOAD_FIELD_METHODS as $method => $defualt) {
+                    $value = (isset($arr[$method])) ? $arr[$method] : $defualt;
+                    $args = $field->{$method}($value);
+                }
                 $out .= $args->get();
             }
         }
-
         return $out;
-    }
-
-    /**
-     * Make grouped template fields into grouped fields
-     * @param  array|null $array [description]
-     * @return array
-     */
-    private function resolveGrpName(): array
-    {
-        $get = array();
-        foreach ($this->inpArr as $a1) {
-            foreach ($a1 as $k => $a2) {
-                if (isset($a2['type'])) {
-                    if (isset($a2['fields'])) {
-                        switch ($a2['type']) {
-                            case "group":
-                                $this->resolveNameNest($a2['fields'], $get, $k);
-                                break;
-                        }
-                    } else {
-                        $get[$k] = $a2;
-                    }
-                }
-            }
-        }
-        return $get;
-    }
-
-    /**
-     * Set input fields name multidimensional
-     * @param  array  $array
-     * @param  array  &$get
-     * @param  string $key
-     * @return void
-     */
-    private function resolveNameNest(array $array, array &$get, string $key): void
-    {
-        foreach ($array as $k => $row) {
-            if (isset($row['type'])) {
-                $k1 = ($key) ? $key.",{$k}" : $k;
-                if (isset($row['fields'])) {
-                    $this->resolveNameNest($row['fields'], $get, $k1);
-                } else {
-                    $get[$k1] = $row;
-                }
-            }
-        }
-    }
-
-    /**
-     * Delete fields
-     */
-    private function findDelete(&$array, $key): void
-    {
-        $k = array_shift($key);
-        if (isset($array[$k])) {
-            if (count($key) > 0) {
-                $this->findDelete($array[$k], $key);
-            } else {
-                unset($array[$k]);
-            }
-        }
     }
 }
