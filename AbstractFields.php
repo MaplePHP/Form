@@ -14,7 +14,6 @@ use PHPFuse\Form\Interfaces\FieldInterface;
 
 abstract class AbstractFields
 {
-
     protected const LOAD_FIELD_METHODS = [
         "label" => null,
         "description" => null,
@@ -31,10 +30,10 @@ abstract class AbstractFields
     protected $values = array();
     protected $inpArr = array();
 
-     /**
-     * Form creator
-     * @param FormFieldsInterface $fields Form template class
-     */
+    /**
+    * Form creator
+    * @param FormFieldsInterface $fields Form template class
+    */
     public function __construct(FormFieldsInterface $fields)
     {
         $this->fields = $fields;
@@ -139,7 +138,7 @@ abstract class AbstractFields
         }
         return $get;
     }
-    
+
     /**
      * Set input fields name multidimensional
      * @param  array  $array
@@ -151,7 +150,7 @@ abstract class AbstractFields
     {
         foreach ($array as $keyB => $row) {
             if (isset($row['type'])) {
-                $newKey = ($keyA) ? $keyA.",{$keyB}" : $keyB;
+                $newKey = ($keyA) ? $keyA . ",{$keyB}" : $keyB;
                 if (isset($row['fields'])) {
                     $this->resolveNameNest($row['fields'], $get, $newKey);
                 } else {

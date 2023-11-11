@@ -13,7 +13,6 @@ use PHPFuse\Form\Interfaces\FieldInterface;
 
 abstract class AbstractArguments
 {
-
     protected $inst;
     protected $attr;
 
@@ -217,7 +216,7 @@ abstract class AbstractArguments
             if ($data = json_decode($jsonStr, true)) {
                 return $data;
             } else {
-                throw new \Exception("JSON ERROR CODE: ".json_last_error(), 1);
+                throw new \Exception("JSON ERROR CODE: " . json_last_error(), 1);
             }
         }
         return $jsonStr;

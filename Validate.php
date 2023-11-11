@@ -3,7 +3,6 @@
 namespace PHPFuse\Form;
 
 use PHPFuse\Form\Interfaces\FieldInterface;
-
 use PHPFuse\Validate\Inp;
 use PHPFuse\DTO\Format\Local;
 
@@ -209,8 +208,10 @@ class Validate
                     return $arr[$firstKey];
                 } else {
                     // Pass on incremental values from field type
-                    if (isset($arr[$firstKey][0]) && is_string($arr[$firstKey][0]) &&
-                        in_array($field->getFieldType(), static::WHITELIST_INC_ARR_FIELD)) {
+                    if (
+                        isset($arr[$firstKey][0]) && is_string($arr[$firstKey][0]) &&
+                        in_array($field->getFieldType(), static::WHITELIST_INC_ARR_FIELD)
+                    ) {
                         $new[$firstKey] = $arr[$firstKey];
                         return $arr[$firstKey];
                     } else {

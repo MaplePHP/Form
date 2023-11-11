@@ -65,7 +65,7 @@ class Fields extends AbstractFields implements FieldInterface
         return $this->resolveGrpName();
     }
 
-    
+
 
     /**
      * Get settted values
