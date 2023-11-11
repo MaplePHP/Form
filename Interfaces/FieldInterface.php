@@ -19,14 +19,12 @@ interface FieldInterface
 
     /**
      * Check if form exists
-     * @param  string  $name Form name
      * @return boolean
      */
     public function hasFormData(): bool;
 
     /**
      * Get fields (will throw Exception if form is missing)
-     * @param  string $name Form name
      * @return array
      */
     public function getFields(): array;
@@ -45,17 +43,16 @@ interface FieldInterface
 
     /**
      * Create form
-     * @param string $name   Form name
      * @param array $fields
      */
     public function add($fields): self;
 
     /**
      * Set validation array
-     * @param string $id
+     * @param string $key
      * @param array  $arr
      */
-    public function setValidateData(string $id, array $arr): void;
+    public function setValidateData(string $key, array $arr): void;
 
     /**
      * Get forms validation options
@@ -82,7 +79,6 @@ interface FieldInterface
     /**
      * Build HTML
      * @param  array $inpArr
-     * @param  callable $callback
      * @return string/html
      */
     public function html(array $inpArr): string;
@@ -101,14 +97,12 @@ interface FieldInterface
 
     /**
      * Check if form exists
-     * @param  string $key The form key
      * @return bool
      */
     public function hasForm(): bool;
 
     /**
      * Get built form (Will return exception if does not exist!)
-     * @param  string $key form key
      * @return string
      */
     public function getForm(): string;

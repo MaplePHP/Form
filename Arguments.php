@@ -31,7 +31,7 @@ class Arguments extends AbstractArguments
 
     /**
      * Add description to field
-     * @param  string $label
+     * @param  string|null $description
      * @return self
      */
     public function description(?string $description): self

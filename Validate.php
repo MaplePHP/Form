@@ -111,7 +111,6 @@ class Validate
     /**
      * Validate field
      * @param  array  $arr   [ Method => [Arg1, Arg2] ]
-     * @param  string $value Field value to be validated
      * @return boolean|array
      */
     protected function isInvalid($arr): bool|array

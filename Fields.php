@@ -38,7 +38,6 @@ class Fields extends AbstractFields implements FieldInterface
 
     /**
      * Check if form exists
-     * @param  string  $name Form name
      * @return boolean
      */
     public function hasFormData(): bool
@@ -48,7 +47,6 @@ class Fields extends AbstractFields implements FieldInterface
 
     /**
      * Get fields (will throw Exception if form is missing)
-     * @param  string $name Form name
      * @return array
      */
     public function getFields(): array
@@ -92,7 +90,6 @@ class Fields extends AbstractFields implements FieldInterface
 
     /**
      * Prepend field
-     * @param  string $name
      * @param  array  $fields
      * @return self
      */
@@ -104,7 +101,6 @@ class Fields extends AbstractFields implements FieldInterface
 
     /**
      * Append field
-     * @param  string $name
      * @param  array  $fields
      * @return self
      */
@@ -116,7 +112,6 @@ class Fields extends AbstractFields implements FieldInterface
 
     /**
      * Delete whole form
-     * @param  string $name Form name
      * @return void
      */
     public function deleteForm(): void
@@ -126,7 +121,6 @@ class Fields extends AbstractFields implements FieldInterface
 
     /**
      * Delete a field in form
-     * @param  string $name Form name
      * @param  string $key  Field name
      * @return void
      */
@@ -210,7 +204,7 @@ class Fields extends AbstractFields implements FieldInterface
 
     /**
      * Check if form exists
-     * @param  string $key The form key
+     * @param  string $name The form key
      * @return bool
      */
     public function hasForm(?string $name = null): bool
@@ -223,7 +217,7 @@ class Fields extends AbstractFields implements FieldInterface
 
     /**
      * Get built form (Will return exception if does not exist!)
-     * @param  string $key form key
+     * @param  string $name form key
      * @return string
      */
     public function getForm(?string $name = null): string
@@ -244,7 +238,6 @@ class Fields extends AbstractFields implements FieldInterface
     /**
      * Build HTML
      * @param  array $inpArr
-     * @param  callable $callback
      * @return string/html
      */
     public function html(array $inpArr): string

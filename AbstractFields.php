@@ -115,7 +115,6 @@ abstract class AbstractFields
 
     /**
      * Make grouped template fields into grouped fields
-     * @param  array|null $array [description]
      * @return array
      */
     final protected function resolveGrpName(): array
@@ -143,7 +142,7 @@ abstract class AbstractFields
      * Set input fields name multidimensional
      * @param  array  $array
      * @param  array  &$get
-     * @param  string $key
+     * @param  string $keyA
      * @return void
      */
     private function resolveNameNest(array $array, array &$get, string $keyA): void

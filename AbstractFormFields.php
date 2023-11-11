@@ -183,8 +183,8 @@ abstract class AbstractFormFields extends Arguments implements FormFieldsInterfa
     public function group()
     {
 
-        $mk = $this->lastKey();
-        $out = "<div class=\"mb-20 group\" {$this->attr}data-key=\"{$mk}\">";
+        $lastKey = $this->lastKey();
+        $out = "<div class=\"mb-20 group\" {$this->attr}data-key=\"{$lastKey}\">";
 
         if (!is_null($this->label)) {
             $out .= "<label>{$this->label}</label>";
@@ -194,7 +194,7 @@ abstract class AbstractFormFields extends Arguments implements FormFieldsInterfa
         }
 
         $out .= "<ul>";
-        $out .= $this->groupFields(function ($o, $val) {
+        $out .= $this->groupFields(function ($o, $_val) {
             $out = "<li>";
             $out .= $o;
             $out .= "</li>";
