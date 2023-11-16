@@ -29,16 +29,14 @@ abstract class AbstractArguments
     protected $fields = array();
     protected $identifier;
 
-
     /**
      * Main field instance
      * @param  FieldInterface $inst
-     * @return self
+     * @return void
      */
-    public function setFieldInst(FieldInterface $inst): self
+    public function setFieldInst(FieldInterface $inst): void
     {
         $this->inst = $inst;
-        return $this;
     }
 
     /**
@@ -186,7 +184,7 @@ abstract class AbstractArguments
         if (is_array($this->value)) {
             return (bool)in_array((string)$val, $this->value);
         }
-        return (bool)((string)$val === (string)$this->value);
+        return ((string)$val === (string)$this->value);
     }
 
     /**

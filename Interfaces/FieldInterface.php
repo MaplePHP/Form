@@ -79,7 +79,7 @@ interface FieldInterface
     /**
      * Build HTML
      * @param  array $inpArr
-     * @return string/html
+     * @return string
      */
     public function html(array $inpArr): string;
 
@@ -106,4 +106,10 @@ interface FieldInterface
      * @return string
      */
     public function getForm(): string;
+
+    /**
+     * Get form name
+     * @return string
+     */
+    public function getFormName(): string;
 }

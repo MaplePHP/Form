@@ -15,43 +15,50 @@ interface FormFieldsInterface
     /**
      * The input field HTML container
      * @param  callable $callback return output
-     * @return string/html
+     * @return string
      */
     public function container(callable $callback): string;
 
     /**
      * Input text
-     * @return string/html
+     * @return string
      */
     public function text(): string;
 
     /**
      * Input hidden
-     * @return string/html
+     * @return string
      */
     public function hidden(): string;
 
     /**
      * Input textarea
-     * @return string/html
+     * @return string
      */
     public function textarea(): string;
 
     /**
      * Input select list
-     * @return string/html
+     * @return string
      */
     public function select(): string;
 
     /**
      * Input radio
-     * @return string/html
+     * @return string
      */
     public function radio(): string;
 
     /**
      * Input checkbox
-     * @return string/html
+     * @return string
      */
     public function checkbox(): string;
+
+    /**
+     * Main field instance
+     * @param  FieldInterface $inst
+     * @return void
+     */
+    public function setFieldInst(FieldInterface $inst): void;
 }

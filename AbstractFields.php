@@ -24,6 +24,7 @@ abstract class AbstractFields
         "attr" => []
     ];
 
+    protected $name = "form";
     protected $fields;
     protected $type;
     protected $args = array();
@@ -43,17 +44,19 @@ abstract class AbstractFields
      * Quick create and return field (Chainable resource)
      * @param  string $a
      * @param  array $b
-     * @return self
+     * @return FormFieldsInterface
      */
-    public function __call($method, $args)
+    public function __call($method, $args): FormFieldsInterface
     {
         // Reset build instance
         if (!is_null($this->type)) {
             $class = get_class($this->fields);
             $this->fields = new $class();
         }
-
-        $this->fields->setFieldInst($this);
+        
+        if($this instanceof FieldInterface) {
+            $this->fields->setFieldInst($this);
+        }
         $this->type = $method;
         $this->args = $args;
         return $this->fields;
@@ -62,9 +65,10 @@ abstract class AbstractFields
 
     /**
      * You can create a new form
-     * @param static
+     * @param string $name
+     * @return self
      */
-    public function withForm($name): self
+    public function withForm(string $name): self
     {
         $clone = clone $this;
         $clone->name = $name;
@@ -74,7 +78,8 @@ abstract class AbstractFields
     /**
      * You can split the form into multiple partials with the help with withForm or new instance
      * Every form partial will then be validate
-     * @param self
+     * @param FieldInterface $inst
+     * @return self
      */
     public function setPartial(FieldInterface $inst): self
     {
@@ -97,10 +102,12 @@ abstract class AbstractFields
         }
     }
 
-    /**
-     * Delete fields
+     /**
+     * Delete search and find a array item
+     * @param  array $key  Possible to traverse to form field with the comma select property
+     * @return void
      */
-    final protected function findDelete(&$array, $key): void
+    final protected function findDelete(array &$array, array $key): void
     {
         $firstKey = array_shift($key);
         if (isset($array[$firstKey])) {

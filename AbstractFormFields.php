@@ -17,7 +17,7 @@ abstract class AbstractFormFields extends Arguments implements FormFieldsInterfa
     /**
      * The input field HTML container
      * @param  callable $callback return output
-     * @return string/html
+     * @return string
      */
     public function container(callable $callback): string
     {
@@ -42,7 +42,7 @@ abstract class AbstractFormFields extends Arguments implements FormFieldsInterfa
 
     /**
      * Input text
-     * @return string/html
+     * @return string
      */
     public function text(): string
     {
@@ -58,7 +58,7 @@ abstract class AbstractFormFields extends Arguments implements FormFieldsInterfa
 
     /**
      * Input hidden
-     * @return string/html
+     * @return string
      */
     public function hidden(): string
     {
@@ -67,7 +67,7 @@ abstract class AbstractFormFields extends Arguments implements FormFieldsInterfa
 
     /**
      * Input text
-     * @return string/html
+     * @return string
      */
     public function date(): string
     {
@@ -83,7 +83,7 @@ abstract class AbstractFormFields extends Arguments implements FormFieldsInterfa
 
     /**
      * Input text
-     * @return string/html
+     * @return string
      */
     public function datetime(): string
     {
@@ -99,7 +99,7 @@ abstract class AbstractFormFields extends Arguments implements FormFieldsInterfa
 
     /**
      * Input textarea
-     * @return string/html
+     * @return string
      */
     public function textarea(): string
     {
@@ -111,7 +111,7 @@ abstract class AbstractFormFields extends Arguments implements FormFieldsInterfa
 
     /**
      * Input select list
-     * @return string/html
+     * @return string
      */
     public function select(): string
     {
@@ -134,7 +134,7 @@ abstract class AbstractFormFields extends Arguments implements FormFieldsInterfa
 
     /**
      * Input radio
-     * @return string/html
+     * @return string
      */
     public function radio(): string
     {
@@ -153,7 +153,7 @@ abstract class AbstractFormFields extends Arguments implements FormFieldsInterfa
 
     /**
      * Input checkbox
-     * @return string/html
+     * @return string
      */
     public function checkbox(): string
     {
@@ -178,7 +178,7 @@ abstract class AbstractFormFields extends Arguments implements FormFieldsInterfa
     /**
      * Group fields
      * With some know how you can make it dynamical
-     * @return string/html
+     * @return string
      */
     public function group()
     {

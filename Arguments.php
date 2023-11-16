@@ -55,15 +55,13 @@ class Arguments extends AbstractArguments
 
     /**
      * Set field attribute
-     * @param  array|bool   $arr
+     * @param  array   $arr
      * @return self
      */
     public function attr(array $arr): self
     {
-        if (is_array($arr)) {
-            $this->attrArr = array_merge($this->attrArr, $arr);
-            $this->setAttr();
-        }
+        $this->attrArr = array_merge($this->attrArr, $arr);
+        $this->setAttr();
         return $this;
     }
 
@@ -74,9 +72,7 @@ class Arguments extends AbstractArguments
      */
     public function config(array $arr): self
     {
-        if (is_array($arr)) {
-            $this->config = array_merge($this->config, $arr);
-        }
+        $this->config = array_merge($this->config, $arr);
         return $this;
     }
 
@@ -87,9 +83,7 @@ class Arguments extends AbstractArguments
      */
     public function items(array $arr): self
     {
-        if (is_array($arr)) {
-            $this->items = $arr;
-        }
+        $this->items = $arr;
         return $this;
     }
 
@@ -100,9 +94,7 @@ class Arguments extends AbstractArguments
      */
     public function fields(array $arr): self
     {
-        if (is_array($arr)) {
-            $this->fields = $arr;
-        }
+        $this->fields = $arr;
         return $this;
     }
 
@@ -113,9 +105,7 @@ class Arguments extends AbstractArguments
      */
     public function validate(array $arr): self
     {
-        if (is_array($arr)) {
-            $this->validate = $arr;
-        }
+        $this->validate = $arr;
         return $this;
     }
 
@@ -137,7 +127,7 @@ class Arguments extends AbstractArguments
      * @param  string $name
      * @return self
      */
-    public function name($name): self
+    public function name(string $name): self
     {
         $this->grpIdentifier = $this->identifier = trim($name);
         $this->nameExp = $exp = explode(",", $this->identifier);
@@ -161,7 +151,7 @@ class Arguments extends AbstractArguments
 
     /**
      * Set field value
-     * @param  boolean $val
+     * @param  string|null $val
      * @return self
      */
     public function value(?string $val = null): self

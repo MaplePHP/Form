@@ -13,8 +13,6 @@ use PHPFuse\Form\Interfaces\FieldInterface;
 
 class Fields extends AbstractFields implements FieldInterface
 {
-    //private $form;
-    private $name = "form";
     private $buildArr;
     private $validateData = array();
 
@@ -38,11 +36,15 @@ class Fields extends AbstractFields implements FieldInterface
 
     /**
      * Check if form exists
+     * @param  string $name The form key
      * @return boolean
      */
-    public function hasFormData(): bool
+    public function hasFormData(?string $name = null): bool
     {
-        return (bool)(isset($this->inpArr[$this->name]));
+        if (is_null($name)) {
+            $name = $this->name;
+        }
+        return (isset($this->inpArr[$name]));
     }
 
     /**
@@ -62,8 +64,6 @@ class Fields extends AbstractFields implements FieldInterface
     {
         return $this->resolveGrpName();
     }
-
-
 
     /**
      * Get settted values
@@ -121,10 +121,10 @@ class Fields extends AbstractFields implements FieldInterface
 
     /**
      * Delete a field in form
-     * @param  string $key  Field name
+     * @param  string|array $key  Field name (possible to traverse to form field with the comma select property)
      * @return void
      */
-    public function deleteField(string $key): void
+    public function deleteField(string|array $key): void
     {
         if (is_array($key)) {
             $this->findDelete($this->inpArr[$this->name], $key);
@@ -161,7 +161,7 @@ class Fields extends AbstractFields implements FieldInterface
      */
     public function getValidateDataRow(string $key): array
     {
-        return ($this->validateData[$key] ?? null);
+        return ($this->validateData[$key] ?? []);
     }
 
     /**
@@ -212,7 +212,7 @@ class Fields extends AbstractFields implements FieldInterface
         if (is_null($name)) {
             $name = $this->name;
         }
-        return (bool)(isset($this->buildArr[$name]));
+        return (isset($this->buildArr[$name]));
     }
 
     /**
@@ -238,7 +238,7 @@ class Fields extends AbstractFields implements FieldInterface
     /**
      * Build HTML
      * @param  array $inpArr
-     * @return string/html
+     * @return string
      */
     public function html(array $inpArr): string
     {

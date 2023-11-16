@@ -154,7 +154,7 @@ class Validate
             $args = array();
         }
         $object = call_user_func_array([$this->validate, $method], $args);
-        return (bool)(($valFilledIn && $this->length > 0 && !$object) || (!$valFilledIn && !$object));
+        return (($valFilledIn && $this->length > 0 && !$object) || (!$valFilledIn && !$object));
     }
 
     /**
