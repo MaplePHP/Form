@@ -54,7 +54,7 @@ abstract class AbstractFields
             $this->fields = new $class();
         }
         
-        if($this instanceof FieldInterface) {
+        if ($this instanceof FieldInterface) {
             $this->fields->setFieldInst($this);
         }
         $this->type = $method;

@@ -37,9 +37,9 @@ interface FieldInterface
 
     /**
      * Get settted values
-     * @return array
+     * @return mixed
      */
-    public function getValues(): array;
+    public function getValues(): mixed;
 
     /**
      * Create form

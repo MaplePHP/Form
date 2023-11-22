@@ -67,9 +67,9 @@ class Fields extends AbstractFields implements FieldInterface
 
     /**
      * Get settted values
-     * @return array
+     * @return mixed
      */
-    public function getValues(): array
+    public function getValues(): mixed
     {
         return $this->values;
     }

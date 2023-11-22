@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @Package:    PHPFuse - Form builder engine
  * @Author:     Daniel Ronkainen
@@ -159,25 +158,36 @@ class Arguments extends AbstractArguments
         if (!is_null($val)) {
             $this->value = $val;
         } elseif (is_array($this->nameExp) && count($this->nameExp) > 0) {
-            $values = $this->inst->getValues();
-            if (!is_null($values)) {
-                $values = (array)$values;
-                $exp = $this->nameExp;
+            $this->valueShifting($this->nameExp, $val);
+        }
+        return $this;
+    }
 
-                $first = array_shift($exp);
-                if (isset($values[$first])) {
-                    $this->value = $values[$first];
-                    if (count($exp) > 0) {
-                        $this->value = $this->json($this->value);
-                        foreach ($exp as $item) {
-                            $item = htmlentities(trim($item));
-                            $this->value = isset($this->value[$item]) ? $this->value[$item] : $val;
+    /**
+     * This will shift the value to the right location
+     * @param  array  $exp
+     * @param  string|null $fallback
+     * @return void
+     */
+    protected function valueShifting(array $exp, ?string $fallback): void
+    {
+        $values = $this->inst->getValues();
+        if (!is_null($values)) {
+            // Can convert obj to arr if needed
+            $values = (array)$values;
+            $first = array_shift($exp);
+            if (isset($values[$first])) {
+                $this->value = $values[$first];
+                if (count($exp) > 0) {
+                    $this->value = $this->json($this->value);
+                    foreach ($exp as $item) {
+                        $item = htmlentities(trim($item));
+                        if (!is_null($this->value)) {
+                            $this->value = (isset($this->value[$item]) && is_array($this->value[$item])) ? $this->value[$item] : $fallback;
                         }
                     }
                 }
             }
         }
-
-        return $this;
     }
 }

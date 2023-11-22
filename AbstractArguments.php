@@ -66,13 +66,23 @@ abstract class AbstractArguments
         return $this->getValues();
     }
 
+
+    /**
+     * Get value
+     * @return mixed
+     */
+    public function getValue(): mixed
+    {
+        return $this->value;
+    }
+
     /**
      * Same as above
      * @return mixed
      */
     public function value(): mixed
     {
-        return $this->value;
+        return $this->getValue();
     }
 
     /**
@@ -91,15 +101,6 @@ abstract class AbstractArguments
     public function getName(): ?string
     {
         return $this->name;
-    }
-
-    /**
-     * Get value
-     * @return mixed
-     */
-    public function getValue(): mixed
-    {
-        return $this->value;
     }
 
     /**
@@ -140,7 +141,7 @@ abstract class AbstractArguments
     protected function groupFields(callable $callback, bool $manipulateName = true)
     {
         $out = "";
-        $fields = array();
+        
         if (!is_array($this->value)) {
             $this->value = array(0);
         } // This will add new value
@@ -148,9 +149,7 @@ abstract class AbstractArguments
             $outB = "";
             foreach ($this->fields as $name => $arr) {
                 $fieldKey = ($manipulateName) ? "{$this->identifier},{$k},{$name}" : $name;
-                $fields[$fieldKey] = $arr;
-                $outB .= $this->inst->html($fields);
-                unset($fields);
+                $outB .= $this->inst->html([$fieldKey => $arr]);
             }
             $out .= $callback($outB, $a);
         }
@@ -164,12 +163,9 @@ abstract class AbstractArguments
     protected function inheritField()
     {
         $out = "";
-        $fields = array();
         foreach ($this->fields as $name => $arr) {
             $fieldKey = "{$this->identifier},{$name}";
-            $fields[$fieldKey] = $arr;
-            $out .= $this->inst->html($fields);
-            unset($fields);
+            $out .= $this->inst->html([$fieldKey => $arr]);
         }
         return $out;
     }

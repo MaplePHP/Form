@@ -28,8 +28,7 @@ abstract class AbstractFormFields extends Arguments implements FormFieldsInterfa
         $out .= "<div class=\"mb-15\" data-count=\"{$length}\">";
         if (!is_null($this->label)) {
             $boolLength = (isset($this->validate['length'][0]) && $this->validate['length'][0] > 0);
-            $boolHasLength = (isset($this->validate['hasLength'][1]) && $this->validate['hasLength'][1] > 0);
-            $req = ($boolLength || $boolHasLength) ? "*" : "";
+            $req = ($boolLength) ? "*" : "";
             $out .= "<label>{$this->label}<span class=\"req\">{$req}</span><div class=\"message hide\"></div></label>";
         }
         if (!is_null($this->description)) {

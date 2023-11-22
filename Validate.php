@@ -9,7 +9,7 @@ use PHPFuse\DTO\Format\Local;
 class Validate
 {
     public const WHITELIST_INC_ARR_FIELD = ["list"];
-    public const TO_REQURED_FLAG = ["length", "hasLength", "hasValue", "required"];
+    public const TO_REQURED_FLAG = ["length", "hasValue", "required"];
 
     private $validArr;
     private $fields;
