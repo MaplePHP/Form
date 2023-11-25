@@ -42,16 +42,15 @@ abstract class AbstractFields
 
     /**
      * Quick create and return field (Chainable resource)
-     * @param  string $a
-     * @param  array $b
+     * @param  string $method
+     * @param  array $args
      * @return FormFieldsInterface
      */
     public function __call($method, $args): FormFieldsInterface
     {
-        // Reset build instance
+        // Reset fields instance
         if (!is_null($this->type)) {
-            $class = get_class($this->fields);
-            $this->fields = new $class();
+            $this->fields = $this->fields->withField();
         }
         
         if ($this instanceof FieldInterface) {
@@ -62,6 +61,14 @@ abstract class AbstractFields
         return $this->fields;
     }
 
+    /**
+     * Get a list of supported field configuration
+     * @return array
+     */
+    public function getConfigs(): array
+    {
+        return static::LOAD_FIELD_METHODS;
+    }
 
     /**
      * You can create a new form

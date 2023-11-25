@@ -16,6 +16,19 @@ class Arguments extends AbstractArguments
     protected $dataName;
 
     /**
+     * New instance with resetted objects
+     * @return self
+     */
+    public function withField(): self
+    {
+        $inst = clone $this;
+        foreach ($inst->inst->getConfigs() as $method => $defualt) {
+            $inst->{$method} = $defualt;
+        }
+        return $inst;
+    }
+
+    /**
      * Add label to field
      * @param  string $label
      * @return self

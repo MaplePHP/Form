@@ -222,7 +222,6 @@ class Fields extends AbstractFields implements FieldInterface
      */
     public function getForm(?string $name = null): string
     {
-
         if (is_null($name)) {
             $name = $this->name;
         }
