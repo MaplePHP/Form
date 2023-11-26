@@ -3,7 +3,7 @@
 /**
  * @Package:    MaplePHP - Form builder interface
  * @Author:     Daniel Ronkainen
- * @Licence:    The MIT License (MIT), Copyright © Daniel Ronkainen
+ * @Licence:    Apache-2.0 license, Copyright © Daniel Ronkainen
                 Don't delete this comment, its part of the license.
  */
 

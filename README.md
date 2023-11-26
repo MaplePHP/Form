@@ -1,4 +1,4 @@
-# PHPFues - Form builder
+# MaplePHP - Form builder
 Create advanced, consistent and secure forms and validations.
 
 ## 1. Initiate
