@@ -1,15 +1,15 @@
 <?php
 
 /**
- * @Package:    PHPFuse - Form builder
+ * @Package:    MaplePHP - Form builder
  * @Author:     Daniel Ronkainen
  * @Licence:    The MIT License (MIT), Copyright © Daniel Ronkainen
                 Don't delete this comment, its part of the license.
  */
 
-namespace PHPFuse\Form;
+namespace MaplePHP\Form;
 
-use PHPFuse\Form\Interfaces\FieldInterface;
+use MaplePHP\Form\Interfaces\FieldInterface;
 
 class Fields extends AbstractFields implements FieldInterface
 {

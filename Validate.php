@@ -1,10 +1,10 @@
 <?php
 
-namespace PHPFuse\Form;
+namespace MaplePHP\Form;
 
-use PHPFuse\Form\Interfaces\FieldInterface;
-use PHPFuse\Validate\Inp;
-use PHPFuse\DTO\Format\Local;
+use MaplePHP\Form\Interfaces\FieldInterface;
+use MaplePHP\Validate\Inp;
+use MaplePHP\DTO\Format\Local;
 
 class Validate
 {

@@ -1,16 +1,16 @@
 <?php
 
 /**
- * @Package:    PHPFuse - Form builder template
+ * @Package:    MaplePHP - Form builder template
  * @Author:     Daniel Ronkainen
  * @Licence:    The MIT License (MIT), Copyright © Daniel Ronkainen
                 Don't delete this comment, its part of the license.
  */
 
-namespace PHPFuse\Form;
+namespace MaplePHP\Form;
 
-use PHPFuse\Form\Interfaces\FormFieldsInterface;
-use PHPFuse\Form\Arguments;
+use MaplePHP\Form\Interfaces\FormFieldsInterface;
+use MaplePHP\Form\Arguments;
 
 abstract class AbstractFormFields extends Arguments implements FormFieldsInterface
 {

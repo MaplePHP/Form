@@ -1,15 +1,15 @@
 <?php
 
 /**
- * @Package:    PHPFuse - Form builder engine
+ * @Package:    MaplePHP - Form builder engine
  * @Author:     Daniel Ronkainen
  * @Licence:    The MIT License (MIT), Copyright © Daniel Ronkainen
                 Don't delete this comment, its part of the license.
  */
 
-namespace PHPFuse\Form;
+namespace MaplePHP\Form;
 
-use PHPFuse\Form\Interfaces\FieldInterface;
+use MaplePHP\Form\Interfaces\FieldInterface;
 
 abstract class AbstractArguments
 {

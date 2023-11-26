@@ -3,8 +3,8 @@ Create advanced, consistent and secure forms and validations.
 
 ## 1. Initiate
 ```php
-use PHPFuse\Form\Fields;
-use PHPFuse\Form\AbstractFormFields; // You should create you own template file for fields
+use MaplePHP\Form\Fields;
+use MaplePHP\Form\AbstractFormFields; // You should create you own template file for fields
 
 $fields = new Fields(new AbstractFormFields());
 ```
@@ -192,7 +192,7 @@ echo "</form>";
 #### 5. Validate form
 Now you can read the form.
 ```php
-use PHPFuse\Form\Validate;
+use MaplePHP\Form\Validate;
 
 $fields->build();
 $validate = new Validate($fields, $_POST);

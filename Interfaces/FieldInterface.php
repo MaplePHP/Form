@@ -1,13 +1,13 @@
 <?php
 
 /**
- * @Package:    PHPFuse - Form builder interface
+ * @Package:    MaplePHP - Form builder interface
  * @Author:     Daniel Ronkainen
  * @Licence:    The MIT License (MIT), Copyright © Daniel Ronkainen
                 Don't delete this comment, its part of the license.
  */
 
-namespace PHPFuse\Form\Interfaces;
+namespace MaplePHP\Form\Interfaces;
 
 interface FieldInterface
 {

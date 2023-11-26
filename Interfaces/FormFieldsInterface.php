@@ -1,14 +1,14 @@
 <?php
 
 /**
- * @Package:    PHP Fuse - Form builder
+ * @Package:    MaplePHP - Form builder
  * @Author:     Daniel Ronkainen
  * @Licence:    The MIT License (MIT), Copyright © Daniel Ronkainen
                 Don't delete this comment, its part of the license.
  * @Version:    2.2.1
  */
 
-namespace PHPFuse\Form\Interfaces;
+namespace MaplePHP\Form\Interfaces;
 
 interface FormFieldsInterface
 {
