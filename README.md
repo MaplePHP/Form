@@ -15,7 +15,10 @@ $fields->[FIELD_TYPE]->[ARG1]->[ARG2]->get();
 **FIELD_TYPE:** Method name from Form\Templates\Fields
 **ARG:** Chainable arguments like input name, fields attributes, validations and so on.
 ```php
-echo $fields->text()->name("email")->attr(["type" => "email"])->get();
+echo $fields->text()->name("email")->label("Email address")->attr([
+        "type" => "email", 
+        "placeholder" => "Input your email..."
+    ])->get();
 ```
 ## Advance:
 Use the form compiler for advance consistent form creation and validation. Works really great in frameworks and large applications.
@@ -91,89 +94,89 @@ Pass on custom data for a custom field.
 #### 1. Create form with array
 Build a whole form with array as bellow
 ```php
-$fields->add("userForm", [
-	"firstname" => [
-		"type" => "text", // Set form type (input text or textarea and so on.)
-		"label" => "First name",
-		"validate" => [
-			"length" => [1, 80]
-		]
-	],
-	"lastname" => [
-		"type" => "text",
-		"label" => "Last name",
-		"validate" => [
-			"length" => [1, 120]
-		]
-	],
-	"email" => [
-		"type" => "text",
-		"label" => "Email",
-		"description" => "We need you email so that we can contact you.",
-		"attr" => [
-			"type" => "email",
-			"placeholder" => "john.doe@hotmail.com"
-		],
-		"validate" => [
-			"length" => [1, 120]
-			"!email" => NULL
-		]
-	],
-	"nested,item1" => [
-		"type" => "radio",
-		"label" => "Question 1",
-		"validate" => [
-			"length" => [1],
-		],
-		"items" => [
-			1 => "Yes",
-			0 => "No"
-		],
-		"value" => 1 // Default value
-	],
-	"nested,item2" => [
-		"type" => "radio",
-		"label" => "Question 2",
-		"validate" => [
-			"length" => [1],
-		],
-		"items" => [
-			1 => "Yes",
-			0 => "No"
-		],
-		"value" => 1 // Default value
-	],
-	"message" => [
-		"type" => "textarea",
-		"label" => "Message",
-		"validate" => [
-			"length" => [0, 2000]
-		]
-	],
-	"gdpr" => [
-		"type" => "checkbox",
-		//"label" => "GDPR",
-		"validate" => [
-			"length" => [1, 1],
-			"!equal" => [1]
-		],
-		"items" => [
-			1 => "I accept that my data will be saved according to GDPR"
-		]
-	]
-  	
+$fields->add([
+    "firstname" => [
+        "type" => "text", // Set form type (input text or textarea and so on.)
+        "label" => "First name",
+        "validate" => [
+            "length" => [1, 80]
+        ]
+    ],
+    "lastname" => [
+        "type" => "text",
+        "label" => "Last name",
+        "validate" => [
+            "length" => [1, 120]
+        ]
+    ],
+    "email" => [
+        "type" => "text",
+        "label" => "Email",
+        "description" => "We need you email so that we can contact you.",
+        "attr" => [
+            "type" => "email",
+            "placeholder" => "john.doe@hotmail.com"
+        ],
+        "validate" => [
+            "length" => [1, 120],
+            "!email" => NULL
+        ]
+    ],
+    "nested,item1" => [
+        "type" => "radio",
+        "label" => "Question 1",
+        "validate" => [
+            "length" => [1],
+        ],
+        "items" => [
+            1 => "Yes",
+            0 => "No"
+        ],
+        "value" => 1 // Default value
+    ],
+    "nested,item2" => [
+        "type" => "radio",
+        "label" => "Question 2",
+        "validate" => [
+            "length" => [1],
+        ],
+        "items" => [
+            1 => "Yes",
+            0 => "No"
+        ],
+        "value" => 1 // Default value
+    ],
+    "message" => [
+        "type" => "textarea",
+        "label" => "Message",
+        "validate" => [
+            "length" => [0, 2000]
+        ]
+    ],
+    "gdpr" => [
+        "type" => "checkbox",
+        //"label" => "GDPR",
+        "validate" => [
+            "length" => [1, 1],
+            "!equal" => [1]
+        ],
+        "items" => [
+            1 => "I accept that my data will be saved according to GDPR"
+        ]
+    ]
+    
 ]);
 ```
 #### 2. Set values if you want
 If you have values from for example the database (accepts multidimensional array and object)
 ```php
 $fields->setValues([
-	"firstname" => "John",
-	"lastname" => "John",
-	"nested" => [
-		"item1" => 0,
-		"item2" => 1,
-	]
+    "firstname" => "John",
+    "lastname" => "John",
+    "nested" => [
+        "item1" => 0,
+        "item2" => 1,
+    ]
 ]);
 
 ```
@@ -186,7 +189,7 @@ $fields->build();
 Now you can read the form.
 ```php
 echo '<form action="index.php" method="post">';
-echo $fields->getForm("userForm");
+echo $fields->getForm();
 echo "</form>";
 ```
 #### 5. Validate form

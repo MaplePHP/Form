@@ -76,8 +76,8 @@ class Fields extends AbstractFields implements FieldInterface
 
     /**
      * Create form
-     * @param string $name   Form name
      * @param array $fields
+     * @param string $name   Form name
      */
     public function add($fields, ?string $name = null): self
     {

@@ -139,11 +139,10 @@ abstract class AbstractFormFields extends Arguments implements FormFieldsInterfa
     {
         return $this->container(function () {
             $out = "";
-            $typeAdd = (isset($this->attrArr['type']) ? null : "type=\"radio\" ");
             foreach ($this->items as $val => $item) {
                 $checked = ($this->isChecked($val)) ? "checked=\"checked\" " : null;
                 $out .= "<label class=\"radio item small\">";
-                $out .= "<input {$checked}{$typeAdd}{$this->attr}name=\"{$this->name}\" value=\"{$val}\"><span class=\"title\">{$item}</span>";
+                $out .= "<input {$checked}type=\"radio\" {$this->attr}name=\"{$this->name}\" value=\"{$val}\"><span class=\"title\">{$item}</span>";
                 $out .= "</label>";
             }
             return $out;
@@ -160,13 +159,12 @@ abstract class AbstractFormFields extends Arguments implements FormFieldsInterfa
 
             $out = "";
             $length = count($this->items);
-            $typeAdd = (isset($this->attrArr['type']) ? null : "type=\"checkbox\" ");
 
             foreach ($this->items as $val => $item) {
                 $name = ($length > 1) ? "{$this->name}[]" : $this->name;
                 $checked = ($this->isChecked($val)) ? "checked=\"checked\" " : null;
                 $out .= "<label class=\"checkbox item small\">";
-                $out .= "<input {$checked}{$typeAdd}{$this->attr}name=\"{$name}\" value=\"{$val}\"><span class=\"title\">{$item}</span>";
+                $out .= "<input {$checked}type=\"checkbox\" {$this->attr}name=\"{$name}\" value=\"{$val}\"><span class=\"title\">{$item}</span>";
                 $out .= "</label>";
             }
             return $out;
