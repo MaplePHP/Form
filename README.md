@@ -4,9 +4,9 @@ Create advanced, consistent and secure forms and validations.
 ## 1. Initiate
 ```php
 use MaplePHP\Form\Fields;
-use MaplePHP\Form\AbstractFormFields; // You should create you own template file for fields
+use MaplePHP\Form\Examples\TestFormFields; // You should create you own template file for fields
 
-$fields = new Fields(new AbstractFormFields());
+$fields = new Fields(new TestFormFields());
 ```
 *It is recommended that you make a copy off AbstractFormFields class, make it to a regualar class, rename it and extend it to the real AbstractFormFields abstract class. Then you can start making and adding your own custom input fields.*
 
