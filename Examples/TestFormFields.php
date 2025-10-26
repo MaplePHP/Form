@@ -13,7 +13,6 @@ use MaplePHP\Form\AbstractFormFields;
 
 class TestFormFields extends AbstractFormFields
 {
-
     /**
      * Input text (Take a look at AbstractFormFields)
      * @return string

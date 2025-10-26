@@ -14,7 +14,7 @@ use MaplePHP\Form\Interfaces\FieldInterface;
 class Fields extends AbstractFields implements FieldInterface
 {
     private $buildArr;
-    private $validateData = array();
+    private $validateData = [];
 
     /**
      * Get form name
@@ -41,7 +41,7 @@ class Fields extends AbstractFields implements FieldInterface
      */
     public function hasFormData(?string $name = null): bool
     {
-        if (is_null($name)) {
+        if ($name === null) {
             $name = $this->name;
         }
         return (isset($this->inpArr[$name]));
@@ -81,7 +81,7 @@ class Fields extends AbstractFields implements FieldInterface
      */
     public function add($fields, ?string $name = null): self
     {
-        if (is_null($name)) {
+        if ($name === null) {
             $name = $this->name;
         }
         $this->inpArr[$name] = $fields;
@@ -171,7 +171,7 @@ class Fields extends AbstractFields implements FieldInterface
      */
     public function build(): void
     {
-        $this->validateData = array();
+        $this->validateData = [];
         foreach ($this->inpArr as $key => $array) {
             $this->buildArr[$key] = $this->html($array);
         }
@@ -195,7 +195,7 @@ class Fields extends AbstractFields implements FieldInterface
      */
     public function get(): string
     {
-        if (!is_null($this->type) && method_exists($this->fields, $this->type)) {
+        if ($this->type !== null && method_exists($this->fields, $this->type)) {
             $get = call_user_func_array([$this->fields, $this->type], $this->args);
             return $get;
         }
@@ -209,7 +209,7 @@ class Fields extends AbstractFields implements FieldInterface
      */
     public function hasForm(?string $name = null): bool
     {
-        if (is_null($name)) {
+        if ($name === null) {
             $name = $this->name;
         }
         return (isset($this->buildArr[$name]));
@@ -222,7 +222,7 @@ class Fields extends AbstractFields implements FieldInterface
      */
     public function getForm(?string $name = null): string
     {
-        if (is_null($name)) {
+        if ($name === null) {
             $name = $this->name;
         }
         if (!$this->hasFormData($name)) {

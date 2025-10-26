@@ -26,12 +26,12 @@ abstract class AbstractFormFields extends Arguments implements FormFieldsInterfa
 
         $out = "";
         $out .= "<div class=\"mb-15\" data-count=\"{$length}\">";
-        if (!is_null($this->label)) {
+        if ($this->label !== null) {
             $boolLength = (isset($this->validate['length'][0]) && $this->validate['length'][0] > 0);
             $req = ($boolLength) ? "*" : "";
             $out .= "<label>{$this->label}<span class=\"req\">{$req}</span><div class=\"message hide\"></div></label>";
         }
-        if (!is_null($this->description)) {
+        if ($this->description !== null) {
             $out .= "<div class=\"description legend\">{$this->description}</div>";
         }
         $out .= $callback();
@@ -183,10 +183,10 @@ abstract class AbstractFormFields extends Arguments implements FormFieldsInterfa
         $lastKey = $this->lastKey();
         $out = "<div class=\"mb-20 group\" {$this->attr}data-key=\"{$lastKey}\">";
 
-        if (!is_null($this->label)) {
+        if ($this->label !== null) {
             $out .= "<label>{$this->label}</label>";
         }
-        if (!is_null($this->description)) {
+        if ($this->description !== null) {
             $out .= "<div class=\"legend mb-20 v3\">{$this->description}</div>";
         }
 

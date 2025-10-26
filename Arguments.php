@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @Package:    MaplePHP - Form builder engine
  * @Author:     Daniel Ronkainen
@@ -128,7 +129,7 @@ class Arguments extends AbstractArguments
      */
     public function default(?string $default): self
     {
-        if (!is_null($default)) {
+        if ($default !== null) {
             $this->default = $default;
         }
         return $this;
@@ -149,7 +150,7 @@ class Arguments extends AbstractArguments
 
         $this->inst->setValidateData($this->identifier, [
             "id" => ($this->rows['id'] ?? 0),
-            "type" => (!is_null($this->fieldType) ? $this->fieldType : "text"),
+            "type" => ($this->fieldType !== null ? $this->fieldType : "text"),
             "validate" => $this->validate,
             "default" => $this->default,
             "config" => $this->config
@@ -168,7 +169,7 @@ class Arguments extends AbstractArguments
      */
     public function value(?string $val = null): self
     {
-        if (!is_null($val)) {
+        if ($val !== null) {
             $this->value = $val;
         } elseif (is_array($this->nameExp) && count($this->nameExp) > 0) {
             $this->valueShifting($this->nameExp, $val);
@@ -185,7 +186,7 @@ class Arguments extends AbstractArguments
     protected function valueShifting(array $exp, ?string $fallback): void
     {
         $values = $this->inst->getValues();
-        if (!is_null($values)) {
+        if ($values !== null) {
             // Can convert obj to arr if needed
             $values = (array)$values;
             $first = array_shift($exp);
@@ -195,7 +196,7 @@ class Arguments extends AbstractArguments
                     $this->value = $this->json($this->value);
                     foreach ($exp as $item) {
                         $item = htmlentities(trim($item));
-                        if (!is_null($this->value)) {
+                        if ($this->value !== null) {
                             $this->value = (isset($this->value[$item]) && is_array($this->value[$item])) ? $this->value[$item] : $fallback;
                         }
                     }

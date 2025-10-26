@@ -27,9 +27,9 @@ abstract class AbstractFields
     protected $name = "form";
     protected $fields;
     protected $type;
-    protected $args = array();
-    protected $values = array();
-    protected $inpArr = array();
+    protected $args = [];
+    protected $values = [];
+    protected $inpArr = [];
 
     /**
     * Form creator
@@ -49,10 +49,10 @@ abstract class AbstractFields
     public function __call($method, $args): FormFieldsInterface
     {
         // Reset fields instance
-        if (!is_null($this->type)) {
+        if ($this->type !== null) {
             $this->fields = $this->fields->withField();
         }
-        
+
         if ($this instanceof FieldInterface) {
             $this->fields->setFieldInst($this);
         }
@@ -109,11 +109,11 @@ abstract class AbstractFields
         }
     }
 
-     /**
-     * Delete search and find a array item
-     * @param  array $key  Possible to traverse to form field with the comma select property
-     * @return void
-     */
+    /**
+    * Delete search and find a array item
+    * @param  array $key  Possible to traverse to form field with the comma select property
+    * @return void
+    */
     final protected function findDelete(array &$array, array $key): void
     {
         $firstKey = array_shift($key);
@@ -133,7 +133,7 @@ abstract class AbstractFields
      */
     final protected function resolveGrpName(): array
     {
-        $get = array();
+        $get = [];
         foreach ($this->inpArr as $a1) {
             foreach ($a1 as $k => $a2) {
                 if (isset($a2['type'])) {

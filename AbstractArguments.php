@@ -17,16 +17,16 @@ abstract class AbstractArguments
     protected $attr;
 
     protected $fieldType;
-    protected $attrArr = array();
+    protected $attrArr = [];
     protected $name;
     protected $value;
     protected $default;
     protected $label;
     protected $description;
-    protected $validate = array();
-    protected $items = array();
-    protected $config = array();
-    protected $fields = array();
+    protected $validate = [];
+    protected $items = [];
+    protected $config = [];
+    protected $fields = [];
     protected $identifier;
 
     /**
@@ -141,9 +141,9 @@ abstract class AbstractArguments
     protected function groupFields(callable $callback, bool $manipulateName = true)
     {
         $out = "";
-        
+
         if (!is_array($this->value)) {
-            $this->value = array(0);
+            $this->value = [0];
         } // This will add new value
         foreach ($this->value as $k => $a) {
             $outB = "";
@@ -191,7 +191,7 @@ abstract class AbstractArguments
     protected function lastKey(): int
     {
         $findKey = 0;
-        if (!is_null($this->value) && is_array($this->value)) {
+        if ($this->value !== null && is_array($this->value)) {
             $findKey = $this->value;
             krsort($findKey);
             $findKey = key($findKey);
