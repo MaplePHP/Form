@@ -3,7 +3,7 @@
 namespace MaplePHP\Form;
 
 use MaplePHP\Form\Interfaces\FieldInterface;
-use MaplePHP\Validate\Inp;
+use MaplePHP\Validate\Validator;
 use MaplePHP\DTO\Format\Local;
 
 class Validate
@@ -14,8 +14,8 @@ class Validate
     private $validArr;
     private $fields;
     private $post;
-    private $request = array();
-    private $files = array();
+    private $request = [];
+    private $files = [];
     private $local;
     private $value;
     private $length = 0;
@@ -80,7 +80,7 @@ class Validate
         $this->fields->setValues($this->post);
         $this->fields->build();
 
-        $postArr = array();
+        $postArr = [];
         $arr = $this->fields->getValidateData();
         foreach ($arr as $name => $arr) {
             $field = $this->fields->{$arr['type']}();
@@ -95,7 +95,7 @@ class Validate
                 if (isset($arr['validate'])) {
                     $this->value = htmlspecialchars((string)$value);
                     $this->length = strlen($this->value);
-                    $this->validate = Inp::value($this->value);
+                    $this->validate = Validator::value($this->value);
 
                     if ($error = $this->isInvalid($arr['validate'])) {
                         $this->validArr[$nameKey] = $error;
@@ -151,7 +151,7 @@ class Validate
     private function validateWithMethod(string $method, ?array $args, bool $valFilledIn): bool
     {
         if (!is_array($args)) {
-            $args = array();
+            $args = [];
         }
         $object = call_user_func_array([$this->validate, $method], $args);
         return (($valFilledIn && $this->length > 0 && !$object) || (!$valFilledIn && !$object));
@@ -175,9 +175,9 @@ class Validate
      * @param  array  $args sprint push possible values
      * @return string
      */
-    protected function message(string $key, array $args = array())
+    protected function message(string $key, array $args = [])
     {
-        if (!is_null($this->local)) {
+        if ($this->local !== null) {
             return $this->local->get($key, $key, $args);
         }
         return $key;
